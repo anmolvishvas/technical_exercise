@@ -11,27 +11,32 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CollaboratorsRepository::class)]
-#[ApiResource(denormalizationContext: ['groups' => ['collaborator:create']])]
+#[ApiResource(
+    denormalizationContext: ['groups' => ['collaborator:create']],
+    normalizationContext: ['groups' => ['read:Collaborator']],
+)]
 class Collaborator
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:Planning','read:Collaborator'])] 
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups('collaborator:create')]
+    #[Groups(['collaborator:create', 'read:Planning','read:Collaborator'])] 
     private ?string $familyName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups('collaborator:create')]
+    #[Groups(['collaborator:create', 'read:Planning','read:Collaborator'])]
     private ?string $givenName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups('collaborator:create')]
+    #[Groups(['collaborator:create', 'read:Planning','read:Collaborator'])]
     private ?string $jobTitle = null;
 
     #[ORM\ManyToOne(inversedBy: 'collaborators', targetEntity: Planning::class, cascade: ['persist'])]
+    #[Groups('read:Collaborator')] 
     private ?Planning $planning = null;
 
     public function getId(): ?int
@@ -39,36 +44,36 @@ class Collaborator
         return $this->id;
     }
 
-    public function getfamilyName(): ?string
+    public function getFamilyName(): ?string
     {
         return $this->familyName;
     }
 
-    public function setfamilyName(string $familyName): self
+    public function setFamilyName(string $familyName): self
     {
         $this->familyName = $familyName;
 
         return $this;
     }
 
-    public function getgivenName(): ?string
+    public function getGivenName(): ?string
     {
         return $this->givenName;
     }
 
-    public function setgivenName(string $givenName): self
+    public function setGivenName(string $givenName): self
     {
         $this->givenName = $givenName;
 
         return $this;
     }
 
-    public function getjobTitle(): ?string
+    public function getJobTitle(): ?string
     {
         return $this->jobTitle;
     }
 
-    public function setjobTitle(string $jobTitle): self
+    public function setJobTitle(string $jobTitle): self
     {
         $this->jobTitle = $jobTitle;
 
@@ -80,7 +85,7 @@ class Collaborator
         return $this->planning;
     }
 
-    public function setPlaning(?Planning $planning): self
+    public function setPlanning(?Planning $planning): self
     {
         $this->planning = $planning;
 
