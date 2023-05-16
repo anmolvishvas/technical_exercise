@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Collaborators;
+use App\Entity\Collaborator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Collaborators>
+ * @extends ServiceEntityRepository<Collaborator>
  *
  * @method Collaborators|null find($id, $lockMode = null, $lockVersion = null)
  * @method Collaborators|null findOneBy(array $criteria, array $orderBy = null)
- * @method Collaborators[]    findAll()
- * @method Collaborators[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Collaborator[]    findAll()
+ * @method Collaborator[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class CollaboratorsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Collaborators::class);
+        parent::__construct($registry, Collaborator::class);
     }
 
-    public function save(Collaborators $entity, bool $flush = false): void
+    public function save(Collaborator $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class CollaboratorsRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Collaborators $entity, bool $flush = false): void
+    public function remove(Collaborator $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class CollaboratorsRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Collaborators[] Returns an array of Collaborators objects
+//     * @return Collaborator[] Returns an array of Collaborator objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class CollaboratorsRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Collaborateurs
+//    public function findOneBySomeField($value): ?Collaborator
 //    {
 //        return $this->createQueryBuilder('c')
 //            ->andWhere('c.exampleField = :val')

@@ -6,10 +6,13 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CollaboratorsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CollaboratorsRepository::class)]
-#[ApiResource]
-class Collaborators
+#[ApiResource(denormalizationContext: ['groups' => ['collaborator:create']])]
+class Collaborator
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -17,13 +20,19 @@ class Collaborators
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('collaborator:create')]
     private ?string $familyName = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('collaborator:create')]
     private ?string $givenName = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('collaborator:create')]
     private ?string $jobTitle = null;
+
+    #[ORM\ManyToOne(inversedBy: 'collaborators', targetEntity: Planning::class, cascade: ['persist'])]
+    private ?Planning $planning = null;
 
     public function getId(): ?int
     {
@@ -62,6 +71,18 @@ class Collaborators
     public function setjobTitle(string $jobTitle): self
     {
         $this->jobTitle = $jobTitle;
+
+        return $this;
+    }
+
+    public function getPlanning(): ?Planning
+    {
+        return $this->planning;
+    }
+
+    public function setPlaning(?Planning $planning): self
+    {
+        $this->planning = $planning;
 
         return $this;
     }
