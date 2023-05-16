@@ -27,7 +27,6 @@ class Planning
     private ?string $description = null;
 
 
-
     #[ORM\OneToMany(mappedBy: 'planning', targetEntity: Collaborator::class)]
     private Collection $collaborators;
 
