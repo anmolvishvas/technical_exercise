@@ -113,6 +113,7 @@ class Planning
 
         return $this;
     }
+    
     /**
      * Removes a collaborator from the planning.
      * Note: The planning can only be removed if there are no assigned collaborators.
