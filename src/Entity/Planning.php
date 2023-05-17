@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use App\Repository\PlanningRepository;
+use App\State\RemoveCollaboratorInPlanningProcessor;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -32,7 +33,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(
             uriTemplate: '/planning/{id}/remove_collaborators',
             requirements: ['id' => '\d+'],
-            status: 200
+            status: 204,
+            denormalizationContext: ['groups' => ['planning_removeCollaborator']],
+            processor: RemoveCollaboratorInPlanningProcessor::class,
+            read:false
         ),
         new Delete(),
     ]
@@ -55,7 +59,7 @@ class Planning
 
 
     #[ORM\OneToMany(mappedBy: 'planning', targetEntity: Collaborator::class)]
-    #[Groups(['planning_createCollaborator', 'read:Planning'])]
+    #[Groups(['planning_createCollaborator', 'read:Planning', 'planning_removeCollaborator'])]
     private Collection $collaborators;
 
     public function __construct() {
