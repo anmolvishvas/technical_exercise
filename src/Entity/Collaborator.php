@@ -39,6 +39,10 @@ class Collaborator
     #[Groups('read:Collaborator')] 
     private ?Planning $planning = null;
 
+    #[ORM\ManyToOne(targetEntity: Leave::class, inversedBy: 'collaborators')]
+    private ?Leave $leave = null;
+
+
     public function getId(): ?int
     {
         return $this->id;
