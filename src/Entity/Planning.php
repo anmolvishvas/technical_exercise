@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+#[ORM\HasLifecycleCallbacks]
 
 #[ORM\Entity(repositoryClass: PlanningRepository::class)]
 #[ApiResource(
@@ -38,7 +39,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             processor: RemoveCollaboratorInPlanningProcessor::class,
             read:false
         ),
-        new Delete(),
+        new Delete(security: "is_granted('REMOVE_PLANNING', object)"),
     ]
 )]
 class Planning
@@ -112,9 +113,14 @@ class Planning
 
         return $this;
     }
-
+    /**
+     * Removes a collaborator from the planning.
+     * Note: The planning can only be removed if there are no assigned collaborators.
+     * Make sure to check permission using the REMOVE_PLANNING attribute with the PlanningVoter before removing.
+     */
     public function removeCollaborator(Collaborator $collaborator): self
     {
+        
         if ($this->collaborators->removeElement($collaborator)) {
             // set the owning side to null (unless already changed)
             if ($collaborator->getPlanning() === $this) {
