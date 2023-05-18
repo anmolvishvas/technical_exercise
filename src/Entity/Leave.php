@@ -8,6 +8,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
+use App\DBAL\Types\EnumLeaveReasonType;
 
 
 #[ORM\Entity(repositoryClass: LeaveRepository::class)]
@@ -32,7 +34,8 @@ class Leave
     #[Groups(['read:Leave','write:Leave'])] 
     private ?\DateTimeInterface $endDate = null;
 
-    #[ORM\Column(type: "enumLeaveReason")]
+    #[ORM\Column(type: 'EnumLeaveReasonType')]
+    #[DoctrineAssert\EnumType(entity: EnumLeaveReasonType::class)]
     #[Groups(['read:Leave','write:Leave'])] 
     private ?string $reason = null;
 

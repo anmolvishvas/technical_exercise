@@ -1,0 +1,19 @@
+api_platform:
+  title: 'Exercice API'
+  version: 1.0.0
+  description: 'This is the exercice api documentation'
+  mapping:
+    paths: ['%kernel.project_dir%/src/Entity']
+  patch_formats:
+    mime_types: ['multipart/form-data']
+    json: ['application/merge-patch+json']
+  swagger:
+    versions: [3]
+    api_keys:
+      bearerAuth:
+        name: Authorization
+        type: header
+  defaults:
+    stateless: true
+    cache_headers:
+      vary: ['Content-Type', 'Authorization', 'Origin']
