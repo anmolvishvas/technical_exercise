@@ -3,39 +3,45 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Enum\LeaveReason;
 use App\Repository\LeaveRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: LeaveRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read:Leave']],
+    denormalizationContext: ['groups' => ['write:Leave']],
+)]
 #[ORM\Table(name: '`leave`')]
 class Leave
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:Leave'])] 
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['read:Leave','write:Leave'])] 
     private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['read:Leave','write:Leave'])] 
     private ?\DateTimeInterface $endDate = null;
 
-    #[ORM\Column(type: Types::STRING)]
+    #[ORM\Column(type: "enumLeaveReason")]
+    #[Groups(['read:Leave','write:Leave'])] 
     private ?string $reason = null;
 
-    #[ORM\OneToMany(mappedBy: "leave", targetEntity: Collaborator::class)]
-    private Collection $collaborators;
+    #[ORM\ManyToOne(inversedBy: "leaves", targetEntity: Collaborator::class)]
+    #[Groups(['read:Leave','write:Leave'])]
+    private Collaborator $collaborator;
 
-    public function __construct()
-    {
-        $this->collaborators = new ArrayCollection();
-    }
+    #[Groups(['read:Leave'])] 
+    private int $numberOfDays = 0;
 
     public function getId(): ?int
     {
@@ -62,9 +68,9 @@ class Leave
     public function setEndDate(\DateTimeInterface $endDate): self
     {
         $this->endDate = $endDate;
-
         return $this;
     }
+
 
     public function getReason(): ?string
     {
@@ -73,15 +79,6 @@ class Leave
 
     public function setReason(string $reason): self
     {
-        if (!in_array($reason, [
-            LeaveReason::PAID,
-            LeaveReason::UNPAID,
-            LeaveReason::EXCEPTIONAL,
-            LeaveReason::SENIORITY,
-        ])) {
-            throw new \InvalidArgumentException('Invalid leave reason.');
-        }
-
         $this->reason = $reason;
 
         return $this;
@@ -90,8 +87,28 @@ class Leave
     /**
      * @return Collection<int, Collaborator>
      */
-    public function getCollaborators(): Collection
+    public function getCollaborator(): Collaborator
     {
-        return $this->collaborators;
+        return $this->collaborator;
     }
+
+    public function setCollaborator(Collaborator $collaborator): self
+    {
+        $this->collaborator = $collaborator;
+
+        return $this;
+    }
+
+    public function getNumberOfDays(): ?int
+    {
+        return $this->numberOfDays;
+    }
+
+    public function setNumberOfDays(int $numberOfDays): self
+    {
+        $this->numberOfDays = $numberOfDays;
+
+        return $this;
+    }
+
 }
