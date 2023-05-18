@@ -20,29 +20,32 @@ class Collaborator
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:Planning','read:Collaborator'])] 
+    #[Groups(['read:Planning','read:Collaborator', 'read:Leave'])] 
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['collaborator:create', 'read:Planning','read:Collaborator'])] 
+    #[Groups(['collaborator:create', 'read:Planning','read:Collaborator', 'read:Leave'])] 
     private ?string $familyName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['collaborator:create', 'read:Planning','read:Collaborator'])]
+    #[Groups(['collaborator:create', 'read:Planning','read:Collaborator', 'read:Leave'])]
     private ?string $givenName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['collaborator:create', 'read:Planning','read:Collaborator'])]
+    #[Groups(['collaborator:create', 'read:Planning','read:Collaborator', 'read:Leave'])]
     private ?string $jobTitle = null;
 
     #[ORM\ManyToOne(inversedBy: 'collaborators', targetEntity: Planning::class, cascade: ['persist'])]
     #[Groups('read:Collaborator')] 
     private ?Planning $planning = null;
 
-    #[ORM\ManyToOne(targetEntity: Leave::class, inversedBy: 'collaborators')]
-    private ?Leave $leave = null;
+    #[ORM\OneToMany(targetEntity: Leave::class, mappedBy: 'collaborators', orphanRemoval: true)]
+    private Collection $leaves;
 
-
+    public function __construct()
+    {
+        $this ->leaves = new ArrayCollection();
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -93,6 +96,30 @@ class Collaborator
     {
         $this->planning = $planning;
 
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Leave>
+     */
+    public function getLeaves(): Collection
+    {
+        return $this->leaves;
+    }
+
+    public function addLeaves(Leave $leave): self
+    {
+        if (!$this->leaves->contains($leave)) {
+            $this->leaves->add($leave);
+            $leave->setCollaborator($this);
+        }
+
+        return $this;
+    }
+    
+    public function removeLeave(Leave $leave): self
+    {
+        $this->leaves->removeElement($leave);
         return $this;
     }
 }
