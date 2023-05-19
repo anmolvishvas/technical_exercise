@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
 use App\Repository\CollaboratorsRepository;
+use App\State\CollaboratorStateProcessor;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
@@ -12,6 +14,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CollaboratorsRepository::class)]
 #[ApiResource(
+    operations:
+    [new Post(
+        uriTemplate: '/collaborator',
+        processor: CollaboratorStateProcessor::class,
+    )],
     denormalizationContext: ['groups' => ['collaborator:create']],
     normalizationContext: ['groups' => ['read:Collaborator']],
 )]
@@ -41,6 +48,9 @@ class Collaborator
 
     #[ORM\OneToMany(targetEntity: Leave::class, mappedBy: 'collaborators', orphanRemoval: true)]
     private Collection $leaves;
+
+    #[ORM\OneToOne(inversedBy: 'collaborator', cascade: ['persist', 'remove'])]
+    private ?User $user = null;
 
     public function __construct()
     {
@@ -120,6 +130,18 @@ class Collaborator
     public function removeLeave(Leave $leave): self
     {
         $this->leaves->removeElement($leave);
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
         return $this;
     }
 }
