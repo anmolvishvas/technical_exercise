@@ -20,19 +20,30 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     denormalizationContext: ['groups' => ['planning_create']],
     normalizationContext: ['groups' => ['read:Planning']],
+    security:'is_granted(\'ROLE_ADMIN\')',
+    openapiContext: [
+        'security' => [['bearerAuth' => []]]
+    ],
     operations: [
         new Get(),
+        new Get(
+            security:'is_granted(\'ROLE_USER\')',
+            openapiContext: [
+                'security' => [['bearerAuth' => []]]
+            ],
+            uriTemplate: '/plannings/leaves',
+        ),
         new GetCollection(),
         new Post(),
         new Post(
-            uriTemplate: '/planning/{id}/add_collaborators',
+            uriTemplate: '/plannings/{id}/add_collaborators',
             requirements: ['id' => '\d+'],
             status: 200,
             denormalizationContext: ['groups' => ['planning_createCollaborator']]
         ),
         new Patch(),
         new Post(
-            uriTemplate: '/planning/{id}/remove_collaborators',
+            uriTemplate: '/plannings/{id}/remove_collaborators',
             requirements: ['id' => '\d+'],
             status: 204,
             denormalizationContext: ['groups' => ['planning_removeCollaborator']],
@@ -51,11 +62,11 @@ class Planning
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['planning_create', 'read:Planning', 'read:Collaborator'])]
+    #[Groups(['planning_create', 'read:Planning', 'read:Collaborator', 'read:Leave'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['planning_create', 'read:Planning', 'read:Collaborator'])]
+    #[Groups(['planning_create', 'read:Planning', 'read:Collaborator', 'read:Leave'])]
     private ?string $description = null;
 
 
@@ -63,8 +74,12 @@ class Planning
     #[Groups(['planning_createCollaborator', 'read:Planning', 'planning_removeCollaborator'])]
     private Collection $collaborators;
 
+    #[ORM\OneToMany(mappedBy: 'planning', targetEntity: Leave::class)]
+    private Collection $leaves;
+
     public function __construct() {
         $this ->collaborators = new ArrayCollection();
+        $this->leaves = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -126,6 +141,36 @@ class Planning
             // set the owning side to null (unless already changed)
             if ($collaborator->getPlanning() === $this) {
                 $collaborator->setPlanning(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Leave>
+     */
+    public function getLeaves(): Collection
+    {
+        return $this->leaves;
+    }
+
+    public function addLeaf(Leave $leaf): self
+    {
+        if (!$this->leaves->contains($leaf)) {
+            $this->leaves->add($leaf);
+            $leaf->setPlanning($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLeaf(Leave $leaf): self
+    {
+        if ($this->leaves->removeElement($leaf)) {
+            // set the owning side to null (unless already changed)
+            if ($leaf->getPlanning() === $this) {
+                $leaf->setPlanning(null);
             }
         }
 

@@ -3,6 +3,10 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\CollaboratorsRepository;
 use App\State\CollaboratorStateProcessor;
@@ -14,11 +18,22 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CollaboratorsRepository::class)]
 #[ApiResource(
+    security:'is_granted(\'ROLE_ADMIN\')',
+    openapiContext: [
+        'security' => [['bearerAuth' => []]]
+    ],
     operations:
-    [new Post(
-        uriTemplate: '/collaborator',
-        processor: CollaboratorStateProcessor::class,
-    )],
+    [
+        new Post
+        (
+            uriTemplate: '/collaborators',
+            processor: CollaboratorStateProcessor::class,
+        ),
+        new Patch(),
+        new Delete(),
+        new GetCollection(),
+        new Get()
+    ],
     denormalizationContext: ['groups' => ['collaborator:create']],
     normalizationContext: ['groups' => ['read:Collaborator']],
 )]

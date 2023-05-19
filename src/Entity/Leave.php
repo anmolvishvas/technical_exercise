@@ -6,6 +6,8 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\LeaveRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
@@ -14,8 +16,22 @@ use App\DBAL\Types\EnumLeaveReasonType;
 
 #[ORM\Entity(repositoryClass: LeaveRepository::class)]
 #[ApiResource(
+    security:'is_granted(\'ROLE_USER\')',
+    openapiContext: [
+        'security' => [['bearerAuth' => []]]
+    ],
     normalizationContext: ['groups' => ['read:Leave']],
     denormalizationContext: ['groups' => ['write:Leave']],
+    operations:
+    [
+        new Get(
+            uriTemplate: '/leaves',
+        ),
+        new Get(
+            uriTemplate: '/leaves/my_leaves',
+        ),
+        new Post()
+    ]
 )]
 #[ORM\Table(name: '`leave`')]
 class Leave
@@ -45,6 +61,10 @@ class Leave
 
     #[Groups(['read:Leave'])] 
     private int $numberOfDays = 0;
+
+    #[ORM\ManyToOne(inversedBy: 'leaves')]
+    #[Groups(['read:Leave','write:Leave'])]
+    private ?Planning $planning = null;
 
     public function getId(): ?int
     {
@@ -110,6 +130,18 @@ class Leave
     public function setNumberOfDays(int $numberOfDays): self
     {
         $this->numberOfDays = $numberOfDays;
+
+        return $this;
+    }
+
+    public function getPlanning(): ?planning
+    {
+        return $this->planning;
+    }
+
+    public function setPlanning(?planning $planning): self
+    {
+        $this->planning = $planning;
 
         return $this;
     }
