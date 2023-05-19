@@ -24,10 +24,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 security:'is_granted(\'ROLE_USER\')',
                 openapiContext: [
                     'security' => [['bearerAuth' => []]]
-                ]
+                ],
+                normalizationContext: ['groups' => ['read:User']]
             ),
         ],
-        normalizationContext: ['groups' => ['read:User']]
+        
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {
@@ -51,9 +52,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     #[ORM\Column]
     private ?string $password = null;
 
+    #[ORM\OneToOne(mappedBy: 'user')]
+    private ?Collaborator $collaborator = null;
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getUsername(): ?string
@@ -83,6 +94,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
      */
     public function getRoles(): array
     {
+        // dd($this->roles);
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
@@ -121,10 +133,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
         // $this->plainPassword = null;
     }
 
-    public static function createFromPayload($username, array $payload)
+    public static function createFromPayload($id, array $payload)
     {
-        $user = new User();
-        $user->setUsername($username);
-        return $user;
+        return (new self())
+            ->setId(intval($id))
+            ->setUsername($payload['username'])
+            ->setRoles($payload['roles'])
+        ;
+    }
+
+    public function getCollaborator(): ?Collaborator
+    {
+        return $this->collaborator;
+    }
+
+    public function setCollaborator(?Collaborator $collaborator): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($collaborator === null && $this->collaborator !== null) {
+            $this->collaborator->setUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($collaborator !== null && $collaborator->getUser() !== $this) {
+            $collaborator->setUser($this);
+        }
+
+        $this->collaborator = $collaborator;
+
+        return $this;
     }
 }
