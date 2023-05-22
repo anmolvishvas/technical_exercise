@@ -30,15 +30,11 @@ final class CurrentUserExtension implements QueryCollectionExtensionInterface, Q
 
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass): void
     {
-        // if (Collaborator::class !== $resourceClass || $this->security->isGranted('ROLE_ADMIN') || null === $user = $this->security->getUser()) {
-        //     return;
-        // }
         if ($resourceClass === Leave::class) {
-            // dd($resourceClass);
             $rootAlias = $queryBuilder->getRootAliases()[0];
             $queryBuilder->innerJoin("$rootAlias.collaborator","collaborator");
             $queryBuilder->andWhere(sprintf("collaborator.user = :current_user"));
-            $queryBuilder->setParameter('current_user', $this->security->getUser()->getUserIdentifier());
+            $queryBuilder->setParameter('current_user', $this->security->getUser());
         }
     }
 }

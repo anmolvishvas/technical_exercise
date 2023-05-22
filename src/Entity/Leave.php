@@ -7,6 +7,7 @@ use App\Repository\LeaveRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -24,10 +25,7 @@ use App\DBAL\Types\EnumLeaveReasonType;
     denormalizationContext: ['groups' => ['write:Leave']],
     operations:
     [
-        new Get(
-            uriTemplate: '/leaves',
-        ),
-        new Get(
+        new GetCollection(
             uriTemplate: '/leaves/my_leaves',
         ),
         new Post()
@@ -134,12 +132,13 @@ class Leave
         return $this;
     }
 
-    public function getPlanning(): ?planning
+
+    public function getPlanning(): ?Planning
     {
         return $this->planning;
     }
 
-    public function setPlanning(?planning $planning): self
+    public function setPlanning(?Planning $planning): self
     {
         $this->planning = $planning;
 
