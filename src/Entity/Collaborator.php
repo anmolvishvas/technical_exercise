@@ -42,19 +42,19 @@ class Collaborator
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:Planning','read:Collaborator', 'read:Leave'])] 
+    #[Groups(['read:Planning','read:Collaborator', 'read:Leave', 'user_leave', 'read:planning_colaborators'])] 
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['collaborator:create', 'read:Planning','read:Collaborator', 'read:Leave'])] 
+    #[Groups(['collaborator:create', 'read:Planning','read:Collaborator', 'read:Leave', 'user_leave', 'read:planning_colaborators'])] 
     private ?string $familyName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['collaborator:create', 'read:Planning','read:Collaborator', 'read:Leave'])]
+    #[Groups(['collaborator:create', 'read:Planning','read:Collaborator', 'read:Leave', 'user_leave', 'read:planning_colaborators'])]
     private ?string $givenName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['collaborator:create', 'read:Planning','read:Collaborator', 'read:Leave'])]
+    #[Groups(['collaborator:create', 'read:Planning','read:Collaborator', 'read:Leave', 'user_leave', 'read:planning_colaborators'])]
     private ?string $jobTitle = null;
 
     #[ORM\ManyToOne(inversedBy: 'collaborators', targetEntity: Planning::class, cascade: ['persist'])]

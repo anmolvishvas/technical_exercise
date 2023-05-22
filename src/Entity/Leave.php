@@ -37,27 +37,27 @@ class Leave
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:Leave'])] 
+    #[Groups(['read:Leave', 'user_leave', 'read:Planning'])] 
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['read:Leave','write:Leave'])] 
+    #[Groups(['read:Leave','write:Leave', 'user_leave', 'read:Planning'])] 
     private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['read:Leave','write:Leave'])] 
+    #[Groups(['read:Leave','write:Leave', 'user_leave', 'read:Planning'])] 
     private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column(type: 'EnumLeaveReasonType')]
     #[DoctrineAssert\EnumType(entity: EnumLeaveReasonType::class)]
-    #[Groups(['read:Leave','write:Leave'])] 
+    #[Groups(['read:Leave','write:Leave', 'user_leave', 'read:Planning'])] 
     private ?string $reason = null;
 
     #[ORM\ManyToOne(inversedBy: "leaves", targetEntity: Collaborator::class)]
-    #[Groups(['read:Leave','write:Leave'])]
+    #[Groups(['read:Leave','write:Leave','user_leave' ])]
     private Collaborator $collaborator;
 
-    #[Groups(['read:Leave'])] 
+    #[Groups(['read:Leave', 'user_leave', 'read:Planning'])] 
     private int $numberOfDays = 0;
 
     #[ORM\ManyToOne(inversedBy: 'leaves')]
