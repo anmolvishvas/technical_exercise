@@ -1,49 +1,62 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\CollaboratorsRepository;
 use App\State\CollaboratorStateProcessor;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CollaboratorsRepository::class)]
 #[ApiResource(
-    operations:
-    [new Post(
-        uriTemplate: '/collaborator',
-        processor: CollaboratorStateProcessor::class,
-    )],
-    denormalizationContext: ['groups' => ['collaborator:create']],
-    normalizationContext: ['groups' => ['read:Collaborator']],
+    security: 'is_granted(\'ROLE_ADMIN\')',
+    openapiContext: [
+        'security' => [['bearerAuth' => []]],
+    ],
+    operations: [
+        new Post(
+            processor: CollaboratorStateProcessor::class,
+        ),
+        new Patch(),
+        new Delete(),
+        new GetCollection(),
+        new Get(),
+    ],
+    denormalizationContext: ['groups' => ['write:collaborator']],
+    normalizationContext: ['groups' => ['read:collaborator']],
 )]
 class Collaborator
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:Planning','read:Collaborator', 'read:Leave'])] 
+    #[Groups(['read:planning', 'read:collaborator', 'read:leave', 'read:user_leave', 'read:planning_collaborator'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['collaborator:create', 'read:Planning','read:Collaborator', 'read:Leave'])] 
+    #[Groups(['write:collaborator', 'read:planning', 'read:collaborator', 'read:leave', 'read:user_leave', 'read:planning_collaborator'])]
     private ?string $familyName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['collaborator:create', 'read:Planning','read:Collaborator', 'read:Leave'])]
+    #[Groups(['write:collaborator', 'read:planning', 'read:collaborator', 'read:leave', 'read:user_leave', 'read:planning_collaborator'])]
     private ?string $givenName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['collaborator:create', 'read:Planning','read:Collaborator', 'read:Leave'])]
+    #[Groups(['write:collaborator', 'read:planning', 'read:collaborator', 'read:leave', 'read:user_leave', 'read:planning_collaborator'])]
     private ?string $jobTitle = null;
 
     #[ORM\ManyToOne(inversedBy: 'collaborators', targetEntity: Planning::class, cascade: ['persist'])]
-    #[Groups('read:Collaborator')] 
+    #[Groups('read:collaborator')]
     private ?Planning $planning = null;
 
     #[ORM\OneToMany(targetEntity: Leave::class, mappedBy: 'collaborators', orphanRemoval: true)]
@@ -54,8 +67,9 @@ class Collaborator
 
     public function __construct()
     {
-        $this ->leaves = new ArrayCollection();
+        $this->leaves = new ArrayCollection();
     }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -109,9 +123,6 @@ class Collaborator
         return $this;
     }
 
-    /**
-     * @return Collection<int, Leave>
-     */
     public function getLeaves(): Collection
     {
         return $this->leaves;
@@ -126,10 +137,11 @@ class Collaborator
 
         return $this;
     }
-    
+
     public function removeLeave(Leave $leave): self
     {
         $this->leaves->removeElement($leave);
+
         return $this;
     }
 

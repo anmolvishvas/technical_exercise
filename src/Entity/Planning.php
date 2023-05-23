@@ -1,70 +1,96 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Repository\PlanningRepository;
 use App\State\RemoveCollaboratorInPlanningProcessor;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-#[ORM\HasLifecycleCallbacks]
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: PlanningRepository::class)]
 #[ApiResource(
-    denormalizationContext: ['groups' => ['planning_create']],
-    normalizationContext: ['groups' => ['read:Planning']],
+    denormalizationContext: ['groups' => ['write:planning']],
+    normalizationContext: ['groups' => ['read:planning']],
+    security: 'is_granted(\'ROLE_ADMIN\')',
+    openapiContext: [
+        'security' => [['bearerAuth' => []]],
+    ],
     operations: [
         new Get(),
+        new Get(
+            security: 'is_granted(\'ROLE_USER\')',
+            openapiContext: [
+                'security' => [['bearerAuth' => []]],
+            ],
+            uriTemplate: '/plannings/{id}/collaborators',
+            normalizationContext: ['groups' => ['read:planning_collaborator']],
+        ),
+        new Get(
+            security: 'is_granted(\'ROLE_USER\')',
+            openapiContext: [
+                'security' => [['bearerAuth' => []]],
+            ],
+            uriTemplate: '/plannings/{id}/leaves',
+            normalizationContext: ['groups' => ['read:user_leave']],
+        ),
         new GetCollection(),
         new Post(),
         new Post(
-            uriTemplate: '/planning/{id}/add_collaborators',
+            uriTemplate: '/plannings/{id}/add_collaborators',
             requirements: ['id' => '\d+'],
             status: 200,
-            denormalizationContext: ['groups' => ['planning_createCollaborator']]
         ),
         new Patch(),
         new Post(
-            uriTemplate: '/planning/{id}/remove_collaborators',
+            uriTemplate: '/plannings/{id}/remove_collaborators',
             requirements: ['id' => '\d+'],
             status: 204,
-            denormalizationContext: ['groups' => ['planning_removeCollaborator']],
+            denormalizationContext: ['groups' => ['write:planning_collaborator']],
             processor: RemoveCollaboratorInPlanningProcessor::class,
-            read:false
+            read: false,
         ),
         new Delete(security: "is_granted('REMOVE_PLANNING', object)"),
-    ]
+    ],
 )]
 class Planning
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:Collaborator'])] 
+    #[Groups(['read:collaborator', 'read:user_leave', 'read:planning_collaborator', 'read:planning'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['planning_create', 'read:Planning', 'read:Collaborator'])]
+    #[Groups(['write:planning', 'read:planning', 'read:collaborator', 'read:user_leave', 'read:planning_collaborator'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['planning_create', 'read:Planning', 'read:Collaborator'])]
+    #[Groups(['write:planning', 'read:planning', 'read:collaborator', 'read:user_leave', 'read:planning_collaborator'])]
     private ?string $description = null;
 
-
     #[ORM\OneToMany(mappedBy: 'planning', targetEntity: Collaborator::class)]
-    #[Groups(['planning_createCollaborator', 'read:Planning', 'planning_removeCollaborator'])]
+    #[Groups(['write:planning_collaborator', 'read:planning', 'write:planning_collaborator', 'read:planning_collaborator'])]
     private Collection $collaborators;
 
-    public function __construct() {
-        $this ->collaborators = new ArrayCollection();
+    #[ORM\OneToMany(mappedBy: 'planning', targetEntity: Leave::class)]
+    #[Groups(['read:user_leave', 'read:planning'])]
+    private Collection $leaves;
+
+    public function __construct()
+    {
+        $this->collaborators = new ArrayCollection();
+        $this->leaves = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -96,9 +122,6 @@ class Planning
         return $this;
     }
 
-    /**
-     * @return Collection<int, Collaborator>
-     */
     public function getCollaborators(): Collection
     {
         return $this->collaborators;
@@ -113,19 +136,38 @@ class Planning
 
         return $this;
     }
-    
-    /**
-     * Removes a collaborator from the planning.
-     * Note: The planning can only be removed if there are no assigned collaborators.
-     * Make sure to check permission using the REMOVE_PLANNING attribute with the PlanningVoter before removing.
-     */
+
     public function removeCollaborator(Collaborator $collaborator): self
     {
-        
         if ($this->collaborators->removeElement($collaborator)) {
-            // set the owning side to null (unless already changed)
             if ($collaborator->getPlanning() === $this) {
                 $collaborator->setPlanning(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getLeaves(): Collection
+    {
+        return $this->leaves;
+    }
+
+    public function addLeaves(Leave $leave): self
+    {
+        if (!$this->leaves->contains($leave)) {
+            $this->leaves->add($leave);
+            $leave->setPlanning($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLeaves(Leave $leave): self
+    {
+        if ($this->leaves->removeElement($leave)) {
+            if ($leave->getPlanning() === $this) {
+                $leave->setPlanning(null);
             }
         }
 

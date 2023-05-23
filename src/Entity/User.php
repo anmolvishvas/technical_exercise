@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
-use ApiPlatform\Action\NotFoundAction;
 use ApiPlatform\Metadata\ApiResource;
-use App\Controller\UserController;
 use ApiPlatform\Metadata\Get;
+use App\Controller\UserController;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
@@ -21,34 +22,30 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 uriTemplate: '/users',
                 controller: UserController::class,
                 read: false,
-                security:'is_granted(\'ROLE_USER\')',
+                security: 'is_granted(\'ROLE_USER\')',
                 openapiContext: [
-                    'security' => [['bearerAuth' => []]]
+                    'security' => [['bearerAuth' => []]],
                 ],
-                normalizationContext: ['groups' => ['read:User']]
+                normalizationContext: ['groups' => ['read:user']],
             ),
         ],
-        
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:User'])] 
+    #[Groups(['read:user'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['read:User'])] 
+    #[Groups(['read:user'])]
     private ?string $username = null;
 
-    #[ORM\Column(type:'json')]
-    #[Groups(['read:User'])] 
+    #[ORM\Column(type: 'json')]
+    #[Groups(['read:user'])]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
 
@@ -79,24 +76,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
         return (string) $this->username;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
-        // dd($this->roles);
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
@@ -109,9 +96,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): string
     {
         return $this->password;
@@ -124,13 +108,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials()
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
     }
 
     public static function createFromPayload($id, array $payload)
@@ -149,13 +128,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
 
     public function setCollaborator(?Collaborator $collaborator): self
     {
-        // unset the owning side of the relation if necessary
-        if ($collaborator === null && $this->collaborator !== null) {
+        if (null === $collaborator && null !== $this->collaborator) {
             $this->collaborator->setUser(null);
         }
 
-        // set the owning side of the relation if necessary
-        if ($collaborator !== null && $collaborator->getUser() !== $this) {
+        if (null !== $collaborator && $collaborator->getUser() !== $this) {
             $collaborator->setUser($this);
         }
 
