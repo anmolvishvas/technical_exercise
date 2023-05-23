@@ -32,7 +32,7 @@ final class CurrentUserExtension implements QueryCollectionExtensionInterface, Q
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass): void
     {
         if ($this->security->getUser() === null) {
-            throw new AccessDeniedHttpException('Access Denied.') ;
+            throw new AccessDeniedHttpException('Access Denied.');
         }
 
         if ($resourceClass !== Leave::class) {

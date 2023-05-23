@@ -49,7 +49,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(
             uriTemplate: '/plannings/{id}/add_collaborators',
             requirements: ['id' => '\d+'],
-            status: 200
+            status: 200,
         ),
         new Patch(),
         new Post(
