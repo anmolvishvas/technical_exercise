@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
-use ApiPlatform\Action\NotFoundAction;
 use ApiPlatform\Metadata\ApiResource;
-use App\Controller\UserController;
 use ApiPlatform\Metadata\Get;
+use App\Controller\UserController;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
@@ -21,29 +22,28 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 uriTemplate: '/users',
                 controller: UserController::class,
                 read: false,
-                security:'is_granted(\'ROLE_USER\')',
+                security: 'is_granted(\'ROLE_USER\')',
                 openapiContext: [
-                    'security' => [['bearerAuth' => []]]
+                    'security' => [['bearerAuth' => []]],
                 ],
-                normalizationContext: ['groups' => ['read:User']]
+                normalizationContext: ['groups' => ['read:User']],
             ),
         ],
-        
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:User'])] 
+    #[Groups(['read:User'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['read:User'])] 
+    #[Groups(['read:User'])]
     private ?string $username = null;
 
-    #[ORM\Column(type:'json')]
-    #[Groups(['read:User'])] 
+    #[ORM\Column(type: 'json')]
+    #[Groups(['read:User'])]
     private array $roles = [];
 
     /**
@@ -150,12 +150,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     public function setCollaborator(?Collaborator $collaborator): self
     {
         // unset the owning side of the relation if necessary
-        if ($collaborator === null && $this->collaborator !== null) {
+        if (null === $collaborator && null !== $this->collaborator) {
             $this->collaborator->setUser(null);
         }
 
         // set the owning side of the relation if necessary
-        if ($collaborator !== null && $collaborator->getUser() !== $this) {
+        if (null !== $collaborator && $collaborator->getUser() !== $this) {
             $collaborator->setUser($this);
         }
 

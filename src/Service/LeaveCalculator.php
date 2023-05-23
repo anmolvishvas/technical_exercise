@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Service;
+declare(strict_types=1);
 
-use DateTime;
+namespace App\Service;
 
 class LeaveCalculator
 {
-    public function calculateWorkingDays(DateTime $startDate, DateTime $endDate): int
+    public function calculateWorkingDays(\DateTime $startDate, \DateTime $endDate): int
     {
         $days = 0;
         $currentDate = clone $startDate;
 
         while ($currentDate <= $endDate) {
             if (!$this->isWeekend($currentDate)) {
-                $days++;
+                ++$days;
             }
 
             $currentDate->modify('+1 day');
@@ -22,10 +22,10 @@ class LeaveCalculator
         return $days;
     }
 
-    private function isWeekend(DateTime $date): bool
+    private function isWeekend(\DateTime $date): bool
     {
         $dayOfWeek = $date->format('N'); // 1 pour lundi, 2 pour mardi, etc.
 
-        return ($dayOfWeek >= 6); 
+        return $dayOfWeek >= 6;
     }
 }

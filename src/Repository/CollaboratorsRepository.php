@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Collaborator;
@@ -11,8 +13,8 @@ use Doctrine\Persistence\ManagerRegistry;
  *
  * @method Collaborators|null find($id, $lockMode = null, $lockVersion = null)
  * @method Collaborators|null findOneBy(array $criteria, array $orderBy = null)
- * @method Collaborator[]    findAll()
- * @method Collaborator[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Collaborator[]     findAll()
+ * @method Collaborator[]     findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class CollaboratorsRepository extends ServiceEntityRepository
 {

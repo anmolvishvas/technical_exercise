@@ -1,15 +1,17 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\DBAL\Types;
 
 use Fresh\DoctrineEnumBundle\DBAL\Types\AbstractEnumType;
 
 final class EnumLeaveReasonType extends AbstractEnumType
 {
-
-    public final const PAID ='paid';
-    public final const UNPAID ='unpaid';
-    public final const EXCEPTIONAL ='exceptional';
-    public final const SENIORITY ='seniority';
+    final public const PAID = 'paid';
+    final public const UNPAID = 'unpaid';
+    final public const EXCEPTIONAL = 'exceptional';
+    final public const SENIORITY = 'seniority';
 
     protected static array $choices = [
         self::PAID => 'paid',

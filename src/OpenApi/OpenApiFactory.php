@@ -1,16 +1,17 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\OpenApi;
 
 use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
-use ApiPlatform\OpenApi\OpenApi;
-use ApiPlatform\OpenApi\Model;
 use ApiPlatform\OpenApi\Model\Operation;
 use ApiPlatform\OpenApi\Model\PathItem;
 use ApiPlatform\OpenApi\Model\RequestBody;
+use ApiPlatform\OpenApi\OpenApi;
 
 class OpenApiFactory implements OpenApiFactoryInterface
 {
-
     public function __construct(private OpenApiFactoryInterface $decorated)
     {
     }
@@ -18,12 +19,12 @@ class OpenApiFactory implements OpenApiFactoryInterface
     public function __invoke(array $context = []): OpenApi
     {
         $openApi = $this->decorated->__invoke($context);
-       
+
         $schemas = $openApi->getComponents()->getSecuritySchemes();
-        $schemas["bearerAuth"] = new \ArrayObject([
+        $schemas['bearerAuth'] = new \ArrayObject([
             'type' => 'http',
             'scheme' => 'bearer',
-            'bearerFormat' => 'JWT'
+            'bearerFormat' => 'JWT',
         ]);
 
         $schemas = $openApi->getComponents()->getSchemas();
@@ -32,13 +33,13 @@ class OpenApiFactory implements OpenApiFactoryInterface
             'properties' => [
                 'username' => [
                     'type' => 'string',
-                    'example' => 'anmol'
+                    'example' => 'anmol',
                 ],
                 'password' => [
                     'type' => 'string',
-                    'example' => '0000'
-                ]
-            ]
+                    'example' => '0000',
+                ],
+            ],
         ]);
 
         $schemas['Token'] = new \ArrayObject([
@@ -46,23 +47,23 @@ class OpenApiFactory implements OpenApiFactoryInterface
             'properties' => [
                 'token' => [
                     'type' => 'string',
-                    'readOnly' => true
-                ]
-            ]
+                    'readOnly' => true,
+                ],
+            ],
         ]);
 
         $pathItem = new PathItem(
             post: new Operation(
-                operationId:'postApiLogin',
+                operationId: 'postApiLogin',
                 tags: ['Auth'],
                 requestBody: new RequestBody(
                     content: new \ArrayObject([
                         'application\json' => [
                             'schema' => [
-                                '$ref' => '#/components/schemas/Credentials'
-                            ]
-                        ]
-                    ])
+                                '$ref' => '#/components/schemas/Credentials',
+                            ],
+                        ],
+                    ]),
                 ),
                 responses: [
                     '200' => [
@@ -70,13 +71,13 @@ class OpenApiFactory implements OpenApiFactoryInterface
                         'content' => [
                             'aplication\json' => [
                                 'schema' => [
-                                    '$ref' => '#/components/schemas/Token'
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            )
+                                    '$ref' => '#/components/schemas/Token',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ),
         );
         $openApi->getPaths()->addPath('/api/login', $pathItem);
 

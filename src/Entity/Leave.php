@@ -1,35 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Repository\LeaveRepository;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\Common\Collections\Collection;
-use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
-use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 use App\DBAL\Types\EnumLeaveReasonType;
-
+use App\Repository\LeaveRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LeaveRepository::class)]
 #[ApiResource(
-    security:'is_granted(\'ROLE_USER\')',
+    security: 'is_granted(\'ROLE_USER\')',
     openapiContext: [
-        'security' => [['bearerAuth' => []]]
+        'security' => [['bearerAuth' => []]],
     ],
     normalizationContext: ['groups' => ['read:Leave']],
     denormalizationContext: ['groups' => ['write:Leave']],
-    operations:
-    [
+    operations: [
         new GetCollection(
             uriTemplate: '/leaves/my_leaves',
         ),
-        new Post()
-    ]
+        new Post(),
+    ],
 )]
 #[ORM\Table(name: '`leave`')]
 class Leave
@@ -37,31 +36,31 @@ class Leave
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:Leave', 'user_leave', 'read:Planning'])] 
+    #[Groups(['read:Leave', 'user_leave', 'read:Planning'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['read:Leave','write:Leave', 'user_leave', 'read:Planning'])] 
+    #[Groups(['read:Leave', 'write:Leave', 'user_leave', 'read:Planning'])]
     private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['read:Leave','write:Leave', 'user_leave', 'read:Planning'])] 
+    #[Groups(['read:Leave', 'write:Leave', 'user_leave', 'read:Planning'])]
     private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column(type: 'EnumLeaveReasonType')]
     #[DoctrineAssert\EnumType(entity: EnumLeaveReasonType::class)]
-    #[Groups(['read:Leave','write:Leave', 'user_leave', 'read:Planning'])] 
+    #[Groups(['read:Leave', 'write:Leave', 'user_leave', 'read:Planning'])]
     private ?string $reason = null;
 
-    #[ORM\ManyToOne(inversedBy: "leaves", targetEntity: Collaborator::class)]
-    #[Groups(['read:Leave','write:Leave','user_leave' ])]
+    #[ORM\ManyToOne(inversedBy: 'leaves', targetEntity: Collaborator::class)]
+    #[Groups(['read:Leave', 'write:Leave', 'user_leave'])]
     private Collaborator $collaborator;
 
-    #[Groups(['read:Leave', 'user_leave', 'read:Planning'])] 
+    #[Groups(['read:Leave', 'user_leave', 'read:Planning'])]
     private int $numberOfDays = 0;
 
     #[ORM\ManyToOne(inversedBy: 'leaves')]
-    #[Groups(['read:Leave','write:Leave'])]
+    #[Groups(['read:Leave', 'write:Leave'])]
     private ?Planning $planning = null;
 
     public function getId(): ?int
@@ -89,9 +88,9 @@ class Leave
     public function setEndDate(\DateTimeInterface $endDate): self
     {
         $this->endDate = $endDate;
+
         return $this;
     }
-
 
     public function getReason(): ?string
     {
@@ -132,7 +131,6 @@ class Leave
         return $this;
     }
 
-
     public function getPlanning(): ?Planning
     {
         return $this->planning;
@@ -144,5 +142,4 @@ class Leave
 
         return $this;
     }
-
 }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 // api/src/Doctrine/CurrentUserExtension.php
 
 namespace App\Doctrine;
@@ -13,7 +16,6 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 final class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
-
     public function __construct(private readonly Security $security)
     {
     }
@@ -30,10 +32,10 @@ final class CurrentUserExtension implements QueryCollectionExtensionInterface, Q
 
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass): void
     {
-        if ($resourceClass === Leave::class) {
+        if (Leave::class === $resourceClass) {
             $rootAlias = $queryBuilder->getRootAliases()[0];
-            $queryBuilder->innerJoin("$rootAlias.collaborator","collaborator");
-            $queryBuilder->andWhere(sprintf("collaborator.user = :current_user"));
+            $queryBuilder->innerJoin("$rootAlias.collaborator", 'collaborator');
+            $queryBuilder->andWhere(sprintf('collaborator.user = :current_user'));
             $queryBuilder->setParameter('current_user', $this->security->getUser());
         }
     }
