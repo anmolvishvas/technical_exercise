@@ -21,15 +21,15 @@ final class CurrentUserExtension implements QueryCollectionExtensionInterface, Q
 
     public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []): void
     {
-        $this->addWhere($queryBuilder, $resourceClass);
+        $this->addWhereCollaboratorIsTheLoggedUser($queryBuilder, $resourceClass);
     }
 
     public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, Operation $operation = null, array $context = []): void
     {
-        $this->addWhere($queryBuilder, $resourceClass);
+        $this->addWhereCollaboratorIsTheLoggedUser($queryBuilder, $resourceClass);
     }
 
-    private function addWhere(QueryBuilder $queryBuilder, string $resourceClass): void
+    private function addWhereCollaboratorIsTheLoggedUser(QueryBuilder $queryBuilder, string $resourceClass): void
     {
         if ($this->security->getUser() === null) {
             throw new AccessDeniedHttpException('Access Denied.');
