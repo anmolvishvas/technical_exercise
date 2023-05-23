@@ -8,14 +8,6 @@ use App\Entity\Collaborator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Collaborator>
- *
- * @method Collaborators|null find($id, $lockMode = null, $lockVersion = null)
- * @method Collaborators|null findOneBy(array $criteria, array $orderBy = null)
- * @method Collaborator[]     findAll()
- * @method Collaborator[]     findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
 class CollaboratorsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
