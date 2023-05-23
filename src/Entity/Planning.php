@@ -141,15 +141,9 @@ class Planning
         return $this;
     }
 
-    /**
-     * Removes a collaborator from the planning.
-     * Note: The planning can only be removed if there are no assigned collaborators.
-     * Make sure to check permission using the REMOVE_PLANNING attribute with the PlanningVoter before removing.
-     */
     public function removeCollaborator(Collaborator $collaborator): self
     {
         if ($this->collaborators->removeElement($collaborator)) {
-            // set the owning side to null (unless already changed)
             if ($collaborator->getPlanning() === $this) {
                 $collaborator->setPlanning(null);
             }
@@ -179,7 +173,6 @@ class Planning
     public function removeLeaves(leave $leave): self
     {
         if ($this->leaves->removeElement($leave)) {
-            // set the owning side to null (unless already changed)
             if ($leave->getPlanning() === $this) {
                 $leave->setPlanning(null);
             }

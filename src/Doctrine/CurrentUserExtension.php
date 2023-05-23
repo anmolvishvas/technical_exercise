@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-// api/src/Doctrine/CurrentUserExtension.php
-
 namespace App\Doctrine;
 
 use ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
@@ -32,11 +30,13 @@ final class CurrentUserExtension implements QueryCollectionExtensionInterface, Q
 
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass): void
     {
-        if (Leave::class === $resourceClass) {
-            $rootAlias = $queryBuilder->getRootAliases()[0];
-            $queryBuilder->innerJoin("$rootAlias.collaborator", 'collaborator');
-            $queryBuilder->andWhere(sprintf('collaborator.user = :current_user'));
-            $queryBuilder->setParameter('current_user', $this->security->getUser());
+        if ($resourceClass !== Leave::class) {
+            return;
         }
+
+        $rootAlias = $queryBuilder->getRootAliases()[0];
+        $queryBuilder->innerJoin("$rootAlias.collaborator", 'collaborator');
+        $queryBuilder->andWhere(sprintf('collaborator.user = :current_user'));
+        $queryBuilder->setParameter('current_user', $this->security->getUser());
     }
 }

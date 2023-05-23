@@ -94,9 +94,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
      */
     public function getRoles(): array
     {
-        // dd($this->roles);
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
@@ -129,8 +127,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
      */
     public function eraseCredentials()
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
     }
 
     public static function createFromPayload($id, array $payload)
@@ -149,12 +145,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
 
     public function setCollaborator(?Collaborator $collaborator): self
     {
-        // unset the owning side of the relation if necessary
         if (null === $collaborator && null !== $this->collaborator) {
             $this->collaborator->setUser(null);
         }
 
-        // set the owning side of the relation if necessary
         if (null !== $collaborator && $collaborator->getUser() !== $this) {
             $collaborator->setUser($this);
         }

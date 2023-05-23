@@ -25,7 +25,6 @@ class RemoveCollaboratorInPlanningProcessor implements ProcessorInterface
         if (!isset($uriVariables['id'])) {
             throw new BadRequestHttpException('Id is compulsory');
         }
-        // Handle the state
         $planning = $this->planningRepository->find($uriVariables['id']);
 
         if (!$planning) {

@@ -24,7 +24,7 @@ class LeaveCalculator
 
     private function isWeekend(\DateTime $date): bool
     {
-        $dayOfWeek = $date->format('N'); // 1 pour lundi, 2 pour mardi, etc.
+        $dayOfWeek = $date->format('N');
 
         return $dayOfWeek >= 6;
     }
