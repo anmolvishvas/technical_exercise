@@ -26,7 +26,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 openapiContext: [
                     'security' => [['bearerAuth' => []]],
                 ],
-                normalizationContext: ['groups' => ['read:User']],
+                normalizationContext: ['groups' => ['read:user']],
             ),
         ],
 )]
@@ -35,20 +35,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:User'])]
+    #[Groups(['read:user'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['read:User'])]
+    #[Groups(['read:user'])]
     private ?string $username = null;
 
     #[ORM\Column(type: 'json')]
-    #[Groups(['read:User'])]
+    #[Groups(['read:user'])]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
 
@@ -79,19 +76,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
         return (string) $this->username;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -107,9 +96,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): string
     {
         return $this->password;
@@ -122,9 +108,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials()
     {
     }

@@ -20,8 +20,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: PlanningRepository::class)]
 #[ApiResource(
-    denormalizationContext: ['groups' => ['planning_create']],
-    normalizationContext: ['groups' => ['read:Planning']],
+    denormalizationContext: ['groups' => ['write:planning']],
+    normalizationContext: ['groups' => ['read:planning']],
     security: 'is_granted(\'ROLE_ADMIN\')',
     openapiContext: [
         'security' => [['bearerAuth' => []]],
@@ -34,7 +34,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 'security' => [['bearerAuth' => []]],
             ],
             uriTemplate: '/plannings/{id}/collaborators',
-            normalizationContext: ['groups' => ['read:planning_colaborators']],
+            normalizationContext: ['groups' => ['read:planning_collaborator']],
         ),
         new Get(
             security: 'is_granted(\'ROLE_USER\')',
@@ -42,22 +42,21 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 'security' => [['bearerAuth' => []]],
             ],
             uriTemplate: '/plannings/{id}/leaves',
-            normalizationContext: ['groups' => ['user_leave']],
+            normalizationContext: ['groups' => ['read:user_leave']],
         ),
         new GetCollection(),
         new Post(),
         new Post(
             uriTemplate: '/plannings/{id}/add_collaborators',
             requirements: ['id' => '\d+'],
-            status: 200,
-            denormalizationContext: ['groups' => ['planning_createCollaborator']],
+            status: 200
         ),
         new Patch(),
         new Post(
             uriTemplate: '/plannings/{id}/remove_collaborators',
             requirements: ['id' => '\d+'],
             status: 204,
-            denormalizationContext: ['groups' => ['planning_removeCollaborator']],
+            denormalizationContext: ['groups' => ['write:planning_collaborator']],
             processor: RemoveCollaboratorInPlanningProcessor::class,
             read: false,
         ),
@@ -69,23 +68,23 @@ class Planning
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:Collaborator', 'user_leave', 'read:planning_colaborators', 'read:Planning'])]
+    #[Groups(['read:collaborator', 'read:user_leave', 'read:planning_collaborator', 'read:planning'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['planning_create', 'read:Planning', 'read:Collaborator', 'user_leave', 'read:planning_colaborators'])]
+    #[Groups(['write:planning', 'read:planning', 'read:collaborator', 'read:user_leave', 'read:planning_collaborator'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['planning_create', 'read:Planning', 'read:Collaborator', 'user_leave', 'read:planning_colaborators'])]
+    #[Groups(['write:planning', 'read:planning', 'read:collaborator', 'read:user_leave', 'read:planning_collaborator'])]
     private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'planning', targetEntity: Collaborator::class)]
-    #[Groups(['planning_createCollaborator', 'read:Planning', 'planning_removeCollaborator', 'read:planning_colaborators'])]
+    #[Groups(['write:planning_collaborator', 'read:planning', 'write:planning_collaborator', 'read:planning_collaborator'])]
     private Collection $collaborators;
 
     #[ORM\OneToMany(mappedBy: 'planning', targetEntity: Leave::class)]
-    #[Groups(['user_leave', 'read:Planning'])]
+    #[Groups(['read:user_leave', 'read:planning'])]
     private Collection $leaves;
 
     public function __construct()
@@ -123,9 +122,6 @@ class Planning
         return $this;
     }
 
-    /**
-     * @return Collection<int, Collaborator>
-     */
     public function getCollaborators(): Collection
     {
         return $this->collaborators;
@@ -152,9 +148,6 @@ class Planning
         return $this;
     }
 
-    /**
-     * @return Collection<int, Leave>
-     */
     public function getLeaves(): Collection
     {
         return $this->leaves;

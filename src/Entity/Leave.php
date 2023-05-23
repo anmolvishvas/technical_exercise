@@ -21,8 +21,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
     openapiContext: [
         'security' => [['bearerAuth' => []]],
     ],
-    normalizationContext: ['groups' => ['read:Leave']],
-    denormalizationContext: ['groups' => ['write:Leave']],
+    normalizationContext: ['groups' => ['read:leave']],
+    denormalizationContext: ['groups' => ['write:leave']],
     operations: [
         new GetCollection(),
         new Post(),
@@ -34,31 +34,31 @@ class Leave
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:Leave', 'user_leave', 'read:Planning'])]
+    #[Groups(['read:leave', 'read:user_leave', 'read:planning'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['read:Leave', 'write:Leave', 'user_leave', 'read:Planning'])]
+    #[Groups(['read:leave', 'write:leave', 'read:user_leave', 'read:planning'])]
     private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['read:Leave', 'write:Leave', 'user_leave', 'read:Planning'])]
+    #[Groups(['read:leave', 'write:leave', 'read:user_leave', 'read:planning'])]
     private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column(type: 'EnumLeaveReasonType')]
     #[DoctrineAssert\EnumType(entity: EnumLeaveReasonType::class)]
-    #[Groups(['read:Leave', 'write:Leave', 'user_leave', 'read:Planning'])]
+    #[Groups(['read:leave', 'write:leave', 'read:user_leave', 'read:planning'])]
     private ?string $reason = null;
 
     #[ORM\ManyToOne(inversedBy: 'leaves', targetEntity: Collaborator::class)]
-    #[Groups(['read:Leave', 'write:Leave', 'user_leave'])]
+    #[Groups(['read:leave', 'write:leave', 'read:user_leave'])]
     private Collaborator $collaborator;
 
-    #[Groups(['read:Leave', 'user_leave', 'read:Planning'])]
+    #[Groups(['read:leave', 'read:user_leave', 'read:planning'])]
     private int $numberOfDays = 0;
 
     #[ORM\ManyToOne(inversedBy: 'leaves')]
-    #[Groups(['read:Leave', 'write:Leave'])]
+    #[Groups(['read:leave', 'write:leave'])]
     private ?Planning $planning = null;
 
     public function getId(): ?int
@@ -102,9 +102,6 @@ class Leave
         return $this;
     }
 
-    /**
-     * @return Collection<int, Collaborator>
-     */
     public function getCollaborator(): Collaborator
     {
         return $this->collaborator;

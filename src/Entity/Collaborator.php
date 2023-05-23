@@ -32,31 +32,31 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new GetCollection(),
         new Get(),
     ],
-    denormalizationContext: ['groups' => ['collaborator:create']],
-    normalizationContext: ['groups' => ['read:Collaborator']],
+    denormalizationContext: ['groups' => ['write:collaborator']],
+    normalizationContext: ['groups' => ['read:collaborator']],
 )]
 class Collaborator
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:Planning', 'read:Collaborator', 'read:Leave', 'user_leave', 'read:planning_colaborators'])]
+    #[Groups(['read:Planning', 'read:collaborator', 'read:leave', 'read:user_leave', 'read:planning_collaborator'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['collaborator:create', 'read:Planning', 'read:Collaborator', 'read:Leave', 'user_leave', 'read:planning_colaborators'])]
+    #[Groups(['write:collaborator', 'read:Planning', 'read:collaborator', 'read:leave', 'read:user_leave', 'read:planning_collaborator'])]
     private ?string $familyName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['collaborator:create', 'read:Planning', 'read:Collaborator', 'read:Leave', 'user_leave', 'read:planning_colaborators'])]
+    #[Groups(['write:collaborator', 'read:Planning', 'read:collaborator', 'read:leave', 'read:user_leave', 'read:planning_collaborator'])]
     private ?string $givenName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['collaborator:create', 'read:Planning', 'read:Collaborator', 'read:Leave', 'user_leave', 'read:planning_colaborators'])]
+    #[Groups(['write:collaborator', 'read:Planning', 'read:collaborator', 'read:leave', 'read:user_leave', 'read:planning_collaborator'])]
     private ?string $jobTitle = null;
 
     #[ORM\ManyToOne(inversedBy: 'collaborators', targetEntity: Planning::class, cascade: ['persist'])]
-    #[Groups('read:Collaborator')]
+    #[Groups('read:collaborator')]
     private ?Planning $planning = null;
 
     #[ORM\OneToMany(targetEntity: Leave::class, mappedBy: 'collaborators', orphanRemoval: true)]
@@ -123,9 +123,6 @@ class Collaborator
         return $this;
     }
 
-    /**
-     * @return Collection<int, Leave>
-     */
     public function getLeaves(): Collection
     {
         return $this->leaves;
