@@ -24,9 +24,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups' => ['read:Leave']],
     denormalizationContext: ['groups' => ['write:Leave']],
     operations: [
-        new GetCollection(
-            uriTemplate: '/leaves/my_leaves',
-        ),
+        new GetCollection(),
         new Post(),
     ],
 )]

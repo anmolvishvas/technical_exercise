@@ -25,7 +25,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ],
     operations: [
         new Post(
-            uriTemplate: '/collaborators',
             processor: CollaboratorStateProcessor::class,
         ),
         new Patch(),

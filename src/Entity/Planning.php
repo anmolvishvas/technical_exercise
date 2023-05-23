@@ -153,14 +153,14 @@ class Planning
     }
 
     /**
-     * @return Collection<int, leave>
+     * @return Collection<int, Leave>
      */
     public function getLeaves(): Collection
     {
         return $this->leaves;
     }
 
-    public function addLeaves(leave $leave): self
+    public function addLeaves(Leave $leave): self
     {
         if (!$this->leaves->contains($leave)) {
             $this->leaves->add($leave);
@@ -170,7 +170,7 @@ class Planning
         return $this;
     }
 
-    public function removeLeaves(leave $leave): self
+    public function removeLeaves(Leave $leave): self
     {
         if ($this->leaves->removeElement($leave)) {
             if ($leave->getPlanning() === $this) {

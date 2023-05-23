@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\Operation;
 use App\Entity\Leave;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 final class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
@@ -30,6 +31,10 @@ final class CurrentUserExtension implements QueryCollectionExtensionInterface, Q
 
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass): void
     {
+        if ($this->security->getUser() === null) {
+            throw new AccessDeniedHttpException('Access Denied.') ;
+        }
+
         if ($resourceClass !== Leave::class) {
             return;
         }
