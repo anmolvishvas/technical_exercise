@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Post;
 use App\Repository\CollaboratorsRepository;
 use App\State\CollaboratorStateProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\State\CollaboratorProvider;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -20,15 +21,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: CollaboratorsRepository::class)]
 #[ApiResource(
     security: 'is_granted(\'ROLE_ADMIN\')',
-    openapiContext: [
-        'security' => [['bearerAuth' => []]],
-    ],
     operations: [
         new Post(
             processor: CollaboratorStateProcessor::class,
         ),
         new Patch(),
         new Delete(),
+        new Get(
+            security: 'is_granted(\'ROLE_USER\')',
+            name:'collab',
+            uriTemplate: '/collaborators/plannings',
+            normalizationContext: ['groups' => ['read:planning_collaborator']],
+            provider: CollaboratorProvider::class,
+        ),
         new GetCollection(),
         new Get(),
     ],

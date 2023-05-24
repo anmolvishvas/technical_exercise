@@ -28,15 +28,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ],
     operations: [
         new Get(),
-        new Get(
-            security: 'is_granted(\'ROLE_USER\')',
-            openapiContext: [
-                'security' => [['bearerAuth' => []]],
-            ],
-            uriTemplate: '/plannings/{id}/collaborators',
-            normalizationContext: ['groups' => ['read:planning_collaborator']],
-        ),
-
         new GetCollection(),
         new Post(),
         new Post(
@@ -61,19 +52,19 @@ class Planning
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:collaborator', 'read:user_leave', 'read:planning_collaborator', 'read:planning'])]
+    #[Groups(['read:collaborator', 'read:user_leave', 'read:planning'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['write:planning', 'read:planning', 'read:collaborator', 'read:user_leave', 'read:planning_collaborator'])]
+    #[Groups(['write:planning', 'read:planning', 'read:collaborator', 'read:user_leave'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['write:planning', 'read:planning', 'read:collaborator', 'read:user_leave', 'read:planning_collaborator'])]
+    #[Groups(['write:planning', 'read:planning', 'read:collaborator', 'read:user_leave'])]
     private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'planning', targetEntity: Collaborator::class)]
-    #[Groups(['write:planning_collaborator', 'read:planning', 'write:planning_collaborator', 'read:planning_collaborator'])]
+    #[Groups(['write:planning_collaborator', 'read:planning', 'write:planning_collaborator'])]
     private Collection $collaborators;
 
     #[ORM\OneToMany(mappedBy: 'planning', targetEntity: Leave::class)]
