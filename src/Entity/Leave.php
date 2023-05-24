@@ -22,12 +22,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups' => ['read:leave']],
     denormalizationContext: ['groups' => ['write:leave']],
     operations: [
-        new GetCollection(),
-        new Post(),
         new Get(
             uriTemplate: '/leaves/plannings',
             provider: LeaveProvider::class,
         ),
+        new GetCollection(),
+        new Post(),
     ],
 )]
 #[ORM\Table(name: '`leave`')]
@@ -49,7 +49,7 @@ class Leave
 
     #[ORM\Column(type: 'EnumLeaveReasonType')]
     #[DoctrineAssert\EnumType(entity: EnumLeaveReasonType::class)]
-    #[Groups(['read:leave', 'write:leave','read:planning'])]
+    #[Groups(['read:leave', 'write:leave', 'read:planning'])]
     private ?string $reason = null;
 
     #[ORM\ManyToOne(inversedBy: 'leaves', targetEntity: Collaborator::class)]

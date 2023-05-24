@@ -70,6 +70,12 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "prepare-test": [
+            "php bin/console doctrine:database:drop --if-exists --force --env=test",
+            "php bin/console doctrine:database:create --env=test",
+            "php bin/console doctrine:schema:update --force --env=test",
+            "php bin/console doctrine:fixtures:load -n --env=test"
         ]
     },
     "conflict": {
@@ -82,9 +88,15 @@
         }
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
         "friendsofphp/php-cs-fixer": "^3.17",
+        "phpunit/phpunit": "^10.1",
+        "symfony/browser-kit": "6.2.*",
+        "symfony/css-selector": "6.2.*",
         "symfony/debug-bundle": "6.2.*",
+        "symfony/http-client": "6.2.*",
         "symfony/maker-bundle": "^1.48",
+        "symfony/phpunit-bridge": "^6.2",
         "symfony/stopwatch": "6.2.*",
         "symfony/web-profiler-bundle": "6.2.*"
     }

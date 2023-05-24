@@ -27,6 +27,7 @@ class LeaveProvider implements ProviderInterface
                 'user' => $user
             ],
         );
+        dd($user);
         $leaves = $this->leaveRepository->findLeaveOfLoggedInUserPlanning($collaborator->getPlanning());
 
         return $leaves;
