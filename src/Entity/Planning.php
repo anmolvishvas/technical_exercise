@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\PlanningRepository;
+use App\State\PlanningProvider;
 use App\State\RemoveCollaboratorInPlanningProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -27,6 +28,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'security' => [['bearerAuth' => []]],
     ],
     operations: [
+        new Get(
+            security: 'is_granted(\'ROLE_USER\')',
+            uriTemplate: '/plannings/details',
+            provider: PlanningProvider::class,
+        ),
         new Get(),
         new GetCollection(),
         new Post(),

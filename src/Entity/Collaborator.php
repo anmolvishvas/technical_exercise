@@ -11,9 +11,9 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\CollaboratorsRepository;
+use App\State\CollaboratorProvider;
 use App\State\CollaboratorStateProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
-use App\State\CollaboratorProvider;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -29,7 +29,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Delete(),
         new Get(
             security: 'is_granted(\'ROLE_USER\')',
-            name:'collab',
             uriTemplate: '/collaborators/plannings',
             normalizationContext: ['groups' => ['read:planning_collaborator']],
             provider: CollaboratorProvider::class,

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Collaborator;
 use App\Entity\Planning;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -31,5 +32,16 @@ class PlanningRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findDetailssOfLoggedInUserPlanning(Collaborator $collaborator): array
+    {
+        return $this->createQueryBuilder(alias: 'planning')
+            ->innerJoin('planning.collaborators', 'collaborator')
+            ->where('collaborator = :collaborator')
+            ->setParameter('collaborator', $collaborator)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 }
