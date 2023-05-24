@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\DBAL\Types\EnumLeaveReasonType;
 use App\Repository\LeaveRepository;
+use App\State\LeaveProvider;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
@@ -17,14 +19,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: LeaveRepository::class)]
 #[ApiResource(
     security: 'is_granted(\'ROLE_USER\')',
-    openapiContext: [
-        'security' => [['bearerAuth' => []]],
-    ],
     normalizationContext: ['groups' => ['read:leave']],
     denormalizationContext: ['groups' => ['write:leave']],
     operations: [
         new GetCollection(),
         new Post(),
+        new Get(
+            uriTemplate: '/leaves/plannings',
+            normalizationContext: ['groups' => ['read:user_leave']],
+            provider: LeaveProvider::class,
+        ),
     ],
 )]
 #[ORM\Table(name: '`leave`')]
@@ -57,7 +61,7 @@ class Leave
     private int $numberOfDays = 0;
 
     #[ORM\ManyToOne(inversedBy: 'leaves')]
-    #[Groups(['read:leave', 'write:leave'])]
+    #[Groups(['read:user_leave', 'read:leave', 'write:leave'])]
     private ?Planning $planning = null;
 
     public function getId(): ?int

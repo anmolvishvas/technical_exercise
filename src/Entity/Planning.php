@@ -36,14 +36,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             uriTemplate: '/plannings/{id}/collaborators',
             normalizationContext: ['groups' => ['read:planning_collaborator']],
         ),
-        new Get(
-            security: 'is_granted(\'ROLE_USER\')',
-            openapiContext: [
-                'security' => [['bearerAuth' => []]],
-            ],
-            uriTemplate: '/plannings/{id}/leaves',
-            normalizationContext: ['groups' => ['read:user_leave']],
-        ),
+
         new GetCollection(),
         new Post(),
         new Post(
@@ -84,7 +77,7 @@ class Planning
     private Collection $collaborators;
 
     #[ORM\OneToMany(mappedBy: 'planning', targetEntity: Leave::class)]
-    #[Groups(['read:user_leave', 'read:planning'])]
+    #[Groups(['read:planning'])]
     private Collection $leaves;
 
     public function __construct()
