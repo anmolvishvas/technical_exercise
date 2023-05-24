@@ -14,7 +14,7 @@ class LeaveProvider implements ProviderInterface
 {
     public function __construct(
         private readonly Security $security,
-        private readonly LeaveRepository $planningRepository,
+        private readonly LeaveRepository $leaveRepository,
         private readonly CollaboratorsRepository $collaboratorsRepository,
     ) {
     }
@@ -27,7 +27,7 @@ class LeaveProvider implements ProviderInterface
                 'user' => $user
             ],
         );
-        $leaves = $this->planningRepository->findLeaveOfLoggedInUserPlanning($collaborator->getPlanning());
+        $leaves = $this->leaveRepository->findLeaveOfLoggedInUserPlanning($collaborator->getPlanning());
 
         return $leaves;
     }

@@ -26,7 +26,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(),
         new Get(
             uriTemplate: '/leaves/plannings',
-            normalizationContext: ['groups' => ['read:user_leave']],
             provider: LeaveProvider::class,
         ),
     ],
@@ -37,27 +36,27 @@ class Leave
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:leave', 'read:user_leave', 'read:planning'])]
+    #[Groups(['read:leave', 'read:planning'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['read:leave', 'write:leave', 'read:user_leave', 'read:planning'])]
+    #[Groups(['read:leave', 'write:leave', 'read:planning'])]
     private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['read:leave', 'write:leave', 'read:user_leave', 'read:planning'])]
+    #[Groups(['read:leave', 'write:leave', 'read:planning'])]
     private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column(type: 'EnumLeaveReasonType')]
     #[DoctrineAssert\EnumType(entity: EnumLeaveReasonType::class)]
-    #[Groups(['read:leave', 'write:leave', 'read:user_leave', 'read:planning'])]
+    #[Groups(['read:leave', 'write:leave','read:planning'])]
     private ?string $reason = null;
 
     #[ORM\ManyToOne(inversedBy: 'leaves', targetEntity: Collaborator::class)]
-    #[Groups(['read:leave', 'write:leave', 'read:user_leave'])]
+    #[Groups(['read:leave', 'write:leave'])]
     private Collaborator $collaborator;
 
-    #[Groups(['read:leave', 'read:user_leave', 'read:planning'])]
+    #[Groups(['read:leave', 'read:planning'])]
     private int $numberOfDays = 0;
 
     #[ORM\ManyToOne(inversedBy: 'leaves')]
