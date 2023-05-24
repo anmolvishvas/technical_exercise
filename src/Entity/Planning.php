@@ -24,9 +24,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
     denormalizationContext: ['groups' => ['write:planning']],
     normalizationContext: ['groups' => ['read:planning']],
     security: 'is_granted(\'ROLE_ADMIN\')',
-    openapiContext: [
-        'security' => [['bearerAuth' => []]],
-    ],
     operations: [
         new Get(
             security: 'is_granted(\'ROLE_USER\')',

@@ -23,9 +23,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 controller: UserController::class,
                 read: false,
                 security: 'is_granted(\'ROLE_USER\')',
-                openapiContext: [
-                    'security' => [['bearerAuth' => []]],
-                ],
                 normalizationContext: ['groups' => ['read:user']],
             ),
         ],
