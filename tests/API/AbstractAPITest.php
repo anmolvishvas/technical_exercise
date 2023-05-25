@@ -6,7 +6,7 @@ namespace App\Tests\API;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 
-abstract class AbstractAPITest extends ApiTestCase
+abstract class AbstractApiTest extends ApiTestCase
 {
     protected function loginUser(string $username, string $password):?string 
     {

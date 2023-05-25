@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\API;
 
-class LeaveTest extends AbstractAPITest 
+class LeaveTest extends AbstractApiTest 
 {
     public function testGetLeavesWithoutLogin(): void
     {
