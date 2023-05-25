@@ -25,8 +25,8 @@ class CollaboratorProvider implements ProviderInterface
                 'user' => $user
             ],
         );
-        $planning = $this->collaboratorsRepository->findCollaboratorsOfLoggedInUserPlanning($collaborator->getPlanning());
+        $collaboratorsPlanning = $this->collaboratorsRepository->findCollaboratorsOfLoggedInUserPlanning($collaborator->getPlanning());
 
-        return $planning;
+        return $collaboratorsPlanning;
     }
 }

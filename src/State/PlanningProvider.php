@@ -27,7 +27,7 @@ class PlanningProvider implements ProviderInterface
                 'user' => $user
             ],
         );
-        $planning = $this->planningRepository->findDetailssOfLoggedInUserPlanning($collaborator);
+        $planning = $this->planningRepository->findPlanningOfLoggedInUserCollaborator($collaborator);
 
         return $planning;
     }

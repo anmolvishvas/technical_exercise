@@ -34,7 +34,7 @@ class LeaveRepository extends ServiceEntityRepository
         }
     }
 
-    public function findLeaveOfLoggedInUserPlanning(Planning $planning): array
+    public function findLeavesOfLoggedInUserPlanning(Planning $planning): array
     {
         return $this->createQueryBuilder(alias: 'leave')
             ->where('leave.planning = :planning')

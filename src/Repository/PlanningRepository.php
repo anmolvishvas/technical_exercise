@@ -34,7 +34,7 @@ class PlanningRepository extends ServiceEntityRepository
         }
     }
 
-    public function findDetailssOfLoggedInUserPlanning(Collaborator $collaborator): array
+    public function findPlanningOfLoggedInUserCollaborator(Collaborator $collaborator): array
     {
         return $this->createQueryBuilder(alias: 'planning')
             ->innerJoin('planning.collaborators', 'collaborator')
