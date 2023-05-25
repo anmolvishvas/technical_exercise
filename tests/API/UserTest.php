@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\API;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 
 class UserTest extends ApiTestCase 
 {
-    public function testLoginWithExistingCredentials(){
+    public function testLoginWithExistingCredentials(): void
+    {
         $client=static::createClient();
 
         $client->request('POST', '/api/login', [
@@ -22,7 +25,8 @@ class UserTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
     }
 
-    public function testLoginWithoutCredentials(){
+    public function testLoginWithoutCredentials(): void
+    {
         $client=static::createClient();
 
         $client->request('POST', '/api/login', [
@@ -32,7 +36,8 @@ class UserTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(400);
     }
 
-    public function testLoginWithNotExistingCredentials(){
+    public function testLoginWithNotExistingCredentials(): void
+    {
         $client=static::createClient();
 
         $client->request('POST', '/api/login', [
