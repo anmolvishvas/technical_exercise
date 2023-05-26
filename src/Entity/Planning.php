@@ -8,8 +8,8 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\PlanningRepository;
 use App\State\PlanningProvider;
 use App\State\RemoveCollaboratorInPlanningProcessor;
@@ -35,10 +35,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(),
         new Post(
             uriTemplate: '/plannings/{id}/add_collaborators',
+            denormalizationContext: ['groups' => ['write:planning_collaborator']],
             requirements: ['id' => '\d+'],
             status: 200,
         ),
-        new Patch(),
+        new Put(),
         new Post(
             uriTemplate: '/plannings/{id}/remove_collaborators',
             requirements: ['id' => '\d+'],

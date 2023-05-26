@@ -23,9 +23,9 @@ class LeaveFixture extends Fixture implements DependentFixtureInterface
             $leave->setCollaborator($this->getReference(UserFixtures::ADMIN_COLLABORATOR_REFERENCE));
             $leave->setPlanning($this->getReference('PLANNING_'.$index));
             $manager->persist($leave);
-            if ($index%5 == 0) {
+            if ($index % 5 == 0) {
                 continue;
-                }
+            }
             ++$index;
         }
 
@@ -38,9 +38,9 @@ class LeaveFixture extends Fixture implements DependentFixtureInterface
             $leave->setCollaborator($this->getReference(UserFixtures::USER_COLLABORATOR_REFERENCE));
             $leave->setPlanning($this->getReference('PLANNING_'.$old_index));
             $manager->persist($leave);
-            if ($old_index%5 == 0) {
+            if ($old_index % 5 == 0) {
                 continue;
-                }
+            }
             ++$old_index;
         }
         $manager->flush();
