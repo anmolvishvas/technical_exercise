@@ -41,7 +41,7 @@ Dans le cadre du processus d'intégration, vous devez passer un petit test techn
 
     # Open XAMPP Control Panel and start 'Apache and 'MySQL'
     # Run server
-    $ symfony server
+    $ php bin/console server
 
 >>>### **How to login?**
 
