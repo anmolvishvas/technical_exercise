@@ -14,12 +14,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class CollaboratorStateProcessor implements ProcessorInterface
 {
-    private $passwordEncoder;
-
-    public function __construct(private EntityManagerInterface $entityManager, private UserRepository $userRepository, UserPasswordHasherInterface $passwordEncoder)
+    public function __construct(private EntityManagerInterface $entityManager, private UserRepository $userRepository, private UserPasswordHasherInterface $passwordEncoder)
     {
-        $this->passwordEncoder = $passwordEncoder;
-        $this->entityManager = $entityManager;
     }
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
