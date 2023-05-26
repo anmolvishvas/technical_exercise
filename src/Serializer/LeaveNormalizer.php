@@ -23,7 +23,6 @@ class LeaveNormalizer implements NormalizerInterface, NormalizerAwareInterface
         $object->setNumberOfDays($this->leaveCalculator->calculateWorkingDays($object->getStartDate(), $object->getEndDate()));
 
         return $this->normalizer->normalize($object, $format, $context + [__CLASS__ => true]);
-        // return $object;
     }
 
     public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool

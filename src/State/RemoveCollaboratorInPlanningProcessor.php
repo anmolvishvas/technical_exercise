@@ -16,7 +16,6 @@ class RemoveCollaboratorInPlanningProcessor implements ProcessorInterface
 {
     public function __construct(private EntityManagerInterface $entityManager, private PlanningRepository $planningRepository)
     {
-        $this->entityManager = $entityManager;
     }
 
     /** @param Planning $data */

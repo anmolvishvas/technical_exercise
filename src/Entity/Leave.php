@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\DBAL\Types\EnumLeaveReasonType;
 use App\Repository\LeaveRepository;
+use App\State\LeaveProvider;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
@@ -17,12 +19,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: LeaveRepository::class)]
 #[ApiResource(
     security: 'is_granted(\'ROLE_USER\')',
-    openapiContext: [
-        'security' => [['bearerAuth' => []]],
-    ],
     normalizationContext: ['groups' => ['read:leave']],
     denormalizationContext: ['groups' => ['write:leave']],
     operations: [
+        new Get(
+            uriTemplate: '/leaves/plannings',
+            provider: LeaveProvider::class,
+        ),
         new GetCollection(),
         new Post(),
     ],
@@ -33,31 +36,31 @@ class Leave
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:leave', 'read:user_leave', 'read:planning'])]
+    #[Groups(['read:leave', 'read:planning'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['read:leave', 'write:leave', 'read:user_leave', 'read:planning'])]
+    #[Groups(['read:leave', 'write:leave', 'read:planning'])]
     private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['read:leave', 'write:leave', 'read:user_leave', 'read:planning'])]
+    #[Groups(['read:leave', 'write:leave', 'read:planning'])]
     private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column(type: 'EnumLeaveReasonType')]
     #[DoctrineAssert\EnumType(entity: EnumLeaveReasonType::class)]
-    #[Groups(['read:leave', 'write:leave', 'read:user_leave', 'read:planning'])]
+    #[Groups(['read:leave', 'write:leave', 'read:planning'])]
     private ?string $reason = null;
 
     #[ORM\ManyToOne(inversedBy: 'leaves', targetEntity: Collaborator::class)]
-    #[Groups(['read:leave', 'write:leave', 'read:user_leave'])]
+    #[Groups(['read:leave', 'write:leave'])]
     private Collaborator $collaborator;
 
-    #[Groups(['read:leave', 'read:user_leave', 'read:planning'])]
+    #[Groups(['read:leave', 'read:planning'])]
     private int $numberOfDays = 0;
 
     #[ORM\ManyToOne(inversedBy: 'leaves')]
-    #[Groups(['read:leave', 'write:leave'])]
+    #[Groups(['read:user_leave', 'read:leave', 'write:leave'])]
     private ?Planning $planning = null;
 
     public function getId(): ?int

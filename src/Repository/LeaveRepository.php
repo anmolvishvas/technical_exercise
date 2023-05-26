@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Leave;
+use App\Entity\Planning;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -31,5 +32,15 @@ class LeaveRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findLeavesOfLoggedInUserPlanning(Planning $planning): array
+    {
+        return $this->createQueryBuilder(alias: 'leave')
+            ->where('leave.planning = :planning')
+            ->setParameter('planning', $planning)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 }

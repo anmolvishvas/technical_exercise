@@ -8,9 +8,10 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\PlanningRepository;
+use App\State\PlanningProvider;
 use App\State\RemoveCollaboratorInPlanningProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -23,35 +24,22 @@ use Symfony\Component\Serializer\Annotation\Groups;
     denormalizationContext: ['groups' => ['write:planning']],
     normalizationContext: ['groups' => ['read:planning']],
     security: 'is_granted(\'ROLE_ADMIN\')',
-    openapiContext: [
-        'security' => [['bearerAuth' => []]],
-    ],
     operations: [
+        new Get(
+            security: 'is_granted(\'ROLE_USER\')',
+            uriTemplate: '/plannings/details',
+            provider: PlanningProvider::class,
+        ),
         new Get(),
-        new Get(
-            security: 'is_granted(\'ROLE_USER\')',
-            openapiContext: [
-                'security' => [['bearerAuth' => []]],
-            ],
-            uriTemplate: '/plannings/{id}/collaborators',
-            normalizationContext: ['groups' => ['read:planning_collaborator']],
-        ),
-        new Get(
-            security: 'is_granted(\'ROLE_USER\')',
-            openapiContext: [
-                'security' => [['bearerAuth' => []]],
-            ],
-            uriTemplate: '/plannings/{id}/leaves',
-            normalizationContext: ['groups' => ['read:user_leave']],
-        ),
         new GetCollection(),
         new Post(),
         new Post(
             uriTemplate: '/plannings/{id}/add_collaborators',
+            denormalizationContext: ['groups' => ['write:planning_collaborator']],
             requirements: ['id' => '\d+'],
             status: 200,
         ),
-        new Patch(),
+        new Put(),
         new Post(
             uriTemplate: '/plannings/{id}/remove_collaborators',
             requirements: ['id' => '\d+'],
@@ -68,23 +56,23 @@ class Planning
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:collaborator', 'read:user_leave', 'read:planning_collaborator', 'read:planning'])]
+    #[Groups(['read:collaborator', 'read:user_leave', 'read:planning'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['write:planning', 'read:planning', 'read:collaborator', 'read:user_leave', 'read:planning_collaborator'])]
+    #[Groups(['write:planning', 'read:planning', 'read:collaborator', 'read:user_leave'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['write:planning', 'read:planning', 'read:collaborator', 'read:user_leave', 'read:planning_collaborator'])]
+    #[Groups(['write:planning', 'read:planning', 'read:collaborator', 'read:user_leave'])]
     private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'planning', targetEntity: Collaborator::class)]
-    #[Groups(['write:planning_collaborator', 'read:planning', 'write:planning_collaborator', 'read:planning_collaborator'])]
+    #[Groups(['write:planning_collaborator', 'read:planning', 'write:planning_collaborator'])]
     private Collection $collaborators;
 
     #[ORM\OneToMany(mappedBy: 'planning', targetEntity: Leave::class)]
-    #[Groups(['read:user_leave', 'read:planning'])]
+    #[Groups(['read:planning'])]
     private Collection $leaves;
 
     public function __construct()
@@ -96,6 +84,13 @@ class Planning
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getName(): ?string

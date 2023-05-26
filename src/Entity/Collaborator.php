@@ -8,27 +8,33 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\CollaboratorsRepository;
+use App\State\CollaboratorProvider;
 use App\State\CollaboratorStateProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CollaboratorsRepository::class)]
 #[ApiResource(
     security: 'is_granted(\'ROLE_ADMIN\')',
-    openapiContext: [
-        'security' => [['bearerAuth' => []]],
-    ],
     operations: [
         new Post(
             processor: CollaboratorStateProcessor::class,
         ),
-        new Patch(),
-        new Delete(),
+        new Delete(
+        ),
+        new Put(),
+        new Get(
+            security: 'is_granted(\'ROLE_USER\')',
+            uriTemplate: '/collaborators/plannings',
+            normalizationContext: ['groups' => ['read:planning_collaborator']],
+            provider: CollaboratorProvider::class,
+        ),
         new GetCollection(),
         new Get(),
     ],
@@ -48,6 +54,7 @@ class Collaborator
     private ?string $familyName = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank()]
     #[Groups(['write:collaborator', 'read:planning', 'read:collaborator', 'read:leave', 'read:user_leave', 'read:planning_collaborator'])]
     private ?string $givenName = null;
 
@@ -59,7 +66,7 @@ class Collaborator
     #[Groups('read:collaborator')]
     private ?Planning $planning = null;
 
-    #[ORM\OneToMany(targetEntity: Leave::class, mappedBy: 'collaborators', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Leave::class, mappedBy: 'collaborator', orphanRemoval: true)]
     private Collection $leaves;
 
     #[ORM\OneToOne(inversedBy: 'collaborator', cascade: ['persist', 'remove'])]
