@@ -20,7 +20,8 @@ Dans le cadre du processus d'intégration, vous devez passer un petit test techn
 >## **Requirements**
 
 * `PHP` *8.0 or later*
-* `Composer` *download [here](https://getcomposer.org/doc/00-intro.md)*
+* `Composer` *download [here](https://getcomposer.org/doc/00-intro.md)
+* `XAMPP`
 * `Git`
 * `MySQL` 
 
@@ -36,7 +37,7 @@ Dans le cadre du processus d'intégration, vous devez passer un petit test techn
 
     # Edit .env.local
     vim .env.local
-    
+
     # Installation of composant
     $ composer install
     $ php bin/console doctrine:database:create --if-not-exists
