@@ -9,14 +9,7 @@ Dans le cadre du processus d'intégration, vous devez passer un petit test techn
 
 >## **Documentations**
 
->>>### **Docs**
-
 * [Symfony](https://symfony.com/doc/current/index.html)
-* [API Platform](https://api-platform.com/docs/)
-* [PHP](https://www.php.net/docs.php)
-
->>>### **Tutorials**
-
 * [Symfony fundamentals and deep into the magic](https://symfonycasts.com/tracks/symfony5)
 * [Symfony - Fundamentals](https://symfonycasts.com/tracks/symfony)
 * [API Platform](https://symfonycasts.com/screencast/api-platform)
@@ -29,8 +22,7 @@ Dans le cadre du processus d'intégration, vous devez passer un petit test techn
 * `PHP` *8.0 or later*
 * `Composer` *download [here](https://getcomposer.org/doc/00-intro.md)*
 * `Git`
-* `XAMPP` *download [here](https://www.apachefriends.org/download.html)*
-* `Symfony` *6*
+* `MySQL` 
 
 >## **How to use?**
 
@@ -49,7 +41,7 @@ Dans le cadre du processus d'intégration, vous devez passer un petit test techn
 
     # Open XAMPP Control Panel and start 'Apache and 'MySQL'
     # Run server
-    $symfony server
+    $ symfony server
 
 >>>### **How to login?**
 
@@ -74,20 +66,20 @@ Dans le cadre du processus d'intégration, vous devez passer un petit test techn
 >>>### **How to Test?**
 
     # On the terminal, run the following commands:
-    $ symfony composer prepare-test
+    $ php bin/composer prepare-test
     $ vendor/bin/phpunit
 
 
 >>>### **Useful commands**
 
     # Commands to run symfony server
-    $ symfony console serve
+    $ php bin/console serve
 
     # Commands to clear cache
-    $ symfony console cache:clear
+    $ php bin/console cache:clear
 
     # Commands to test
-    $ symfony composer prepare-test
+    $ php bin/composer prepare-test
     $ vendor/bin/phpunit
 
     # Commands to run PHP code fixer
