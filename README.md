@@ -79,7 +79,7 @@ Dans le cadre du processus d'intégration, vous devez passer un petit test techn
     $ php bin/console cache:clear
 
     # Commands to test
-    $ php bin/console composer prepare-test
+    $ composer prepare-test
     $ vendor/bin/phpunit
 
     # Commands to run PHP code fixer
