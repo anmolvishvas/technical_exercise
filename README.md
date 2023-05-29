@@ -32,12 +32,6 @@ Dans le cadre du processus d'intégration, vous devez passer un petit test techn
     $ git clone git@github.com:anmolvishvas/technical_exercise.git
     $ cd /path/to/technical_exercice/
 
-    # copy env variables
-    cp .env .env.local
-
-    # Edit .env.local
-    vim .env.local
-
     # Installation of composant
     $ composer install
     $ php bin/console doctrine:database:create --if-not-exists
