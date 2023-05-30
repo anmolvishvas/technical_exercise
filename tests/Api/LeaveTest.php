@@ -32,65 +32,65 @@ class LeaveTest extends AbstractApiTest
 
         $this->assertJsonContains([
             "@context"=> "/api/contexts/Leave",
-        "@id"=> "/api/leaves",
-        "@type"=> "hydra:Collection",
-        "hydra:totalItems"=> 15,
-        "hydra:member"=> [
+            "@id"=> "/api/leaves",
+            "@type"=> "hydra:Collection",
+            "hydra:totalItems"=> 15,
+            "hydra:member"=> [
             [
-            "@id"=> "/api/leaves/plannings",
-            "@type"=> "Leave",
-            'id' => 16,
-      'startDate' => '2023-05-24T00:00:00+02:00',
-      'endDate' => '2023-05-30T00:00:00+02:00',
-     'reason' => 'paid',
-            "collaborator"=> [
-                "@id"=> "/api/collaborators/plannings",
-                "@type"=> "Collaborator",
-                "id"=> 2,
-                "familyName"=> "Santilal",
-                "givenName"=> "Vishvas",
-                "jobTitle"=> "Shopkeeper"
+                "@id"=> "/api/leaves/plannings",
+                "@type"=> "Leave",
+                'id' => 16,
+                'startDate' => '2023-05-24T00:00:00+00:00',
+                'endDate' => '2023-05-30T00:00:00+00:00',
+                'reason' => 'paid',
+                "collaborator"=> [
+                    "@id"=> "/api/collaborators/plannings",
+                    "@type"=> "Collaborator",
+                    "id"=> 2,
+                    "familyName"=> "Santilal",
+                    "givenName"=> "Vishvas",
+                    "jobTitle"=> "Shopkeeper"
+                ],
+                "numberOfDays"=> 5,
+                "planning"=> "/api/plannings/details"
             ],
-            "numberOfDays"=> 5,
-            "planning"=> "/api/plannings/details"
-        ],
             [
-            "@id"=> "/api/leaves/plannings",
-            "@type"=> "Leave",
-            'id' => 17,
-      'startDate' => '2023-05-24T00:00:00+02:00',
-      'endDate' => '2023-05-30T00:00:00+02:00',
-            "reason"=> "paid",
-            "collaborator"=> [
-                "@id"=> "/api/collaborators/plannings",
-                "@type"=> "Collaborator",
-                "id"=> 2,
-                "familyName"=> "Santilal",
-                "givenName"=> "Vishvas",
-                "jobTitle"=> "Shopkeeper"
+                "@id"=> "/api/leaves/plannings",
+                "@type"=> "Leave",
+                'id' => 17,
+                'startDate' => '2023-05-24T00:00:00+00:00',
+                'endDate' => '2023-05-30T00:00:00+00:00',
+                "reason"=> "paid",
+                "collaborator"=> [
+                    "@id"=> "/api/collaborators/plannings",
+                    "@type"=> "Collaborator",
+                    "id"=> 2,
+                    "familyName"=> "Santilal",
+                    "givenName"=> "Vishvas",
+                    "jobTitle"=> "Shopkeeper"
+                ],
+                "numberOfDays"=> 5,
+                "planning"=> "/api/plannings/details"
             ],
-            "numberOfDays"=> 5,
-            "planning"=> "/api/plannings/details"
-        ],
-        [
-            "@id"=> "/api/leaves/plannings",
-            "@type"=> "Leave",
-            "id"=> 18,
-            "startDate"=> "2023-05-24T00:00:00+02:00",
-            'endDate' => '2023-05-30T00:00:00+02:00',
-          'reason' => 'paid',
-            "collaborator"=>[ 
-                "@id"=> "/api/collaborators/plannings",
-                "@type"=> "Collaborator",
-                "id"=> 2,
-                "familyName"=> "Santilal",
-                "givenName"=> "Vishvas",
-                "jobTitle"=> "Shopkeeper"
-            ],
-            "numberOfDays"=> 5,
-            "planning"=> "/api/plannings/details"
+            [
+                "@id"=> "/api/leaves/plannings",
+                "@type"=> "Leave",
+                "id"=> 18,
+                "startDate"=> "2023-05-24T00:00:00+00:00",
+                'endDate' => '2023-05-30T00:00:00+00:00',
+                'reason' => 'paid',
+                "collaborator"=>[ 
+                    "@id"=> "/api/collaborators/plannings",
+                    "@type"=> "Collaborator",
+                    "id"=> 2,
+                    "familyName"=> "Santilal",
+                    "givenName"=> "Vishvas",
+                    "jobTitle"=> "Shopkeeper"
+                ],
+                "numberOfDays"=> 5,
+                "planning"=> "/api/plannings/details"
+                ]
             ]
-        ]
         ]);
     }
 
@@ -259,8 +259,8 @@ class LeaveTest extends AbstractApiTest
                     "@id"=> "/api/leaves/plannings",
                     "@type"=> "Leave",
                     'id' => 2,
-                    'startDate' => '2023-05-24T00:00:00+02:00',
-                    'endDate' => '2023-05-30T00:00:00+02:00',
+                    'startDate' => '2023-05-24T00:00:00+00:00',
+                    'endDate' => '2023-05-30T00:00:00+00:00',
                     "reason"=> "unpaid",
                     "collaborator"=> [
                         "@id"=> "/api/collaborators/plannings",
@@ -276,8 +276,8 @@ class LeaveTest extends AbstractApiTest
                     "@id"=> "/api/leaves/plannings",
                     "@type"=> "Leave",
                     'id' => 17,
-                    "startDate"=> "2023-05-24T00:00:00+02:00",
-                    'endDate' => '2023-05-30T00:00:00+02:00',
+                    "startDate"=> "2023-05-24T00:00:00+00:00",
+                    'endDate' => '2023-05-30T00:00:00+00:00',
                     "reason"=> "paid",
                     "collaborator"=> [
                         "@id"=> "/api/collaborators/plannings",

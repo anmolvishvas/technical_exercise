@@ -48,8 +48,8 @@ class PlanningTest extends AbstractApiTest
                         "@id"=> "/api/leaves/plannings",
                         "@type"=> "Leave",
                         'id' => 1,
-                        'startDate' => '2023-05-24T00:00:00+02:00',
-                        'endDate' => '2023-05-30T00:00:00+02:00',
+                        'startDate' => '2023-05-24T00:00:00+00:00',
+                        'endDate' => '2023-05-30T00:00:00+00:00',
                         "reason"=> "unpaid",
                         'numberOfDays' => 5
                     ],
@@ -57,8 +57,8 @@ class PlanningTest extends AbstractApiTest
                         "@id"=> "/api/leaves/plannings",
                         "@type"=> "Leave",
                         'id' => 16,
-                        'startDate' => '2023-05-24T00:00:00+02:00',
-                        'endDate' => '2023-05-30T00:00:00+02:00',
+                        'startDate' => '2023-05-24T00:00:00+00:00',
+                        'endDate' => '2023-05-30T00:00:00+00:00',
                         "reason"=> "paid",
                         "numberOfDays"=> 5
                     ]
@@ -184,8 +184,8 @@ class PlanningTest extends AbstractApiTest
                         "@id"=> "/api/leaves/plannings",
                         "@type"=> "Leave",
                         'id' => 1,
-                        'startDate' => '2023-05-24T00:00:00+02:00',
-                        'endDate' => '2023-05-30T00:00:00+02:00',
+                        'startDate' => '2023-05-24T00:00:00+00:00',
+                        'endDate' => '2023-05-30T00:00:00+00:00',
                         "reason"=> "unpaid",
                         'numberOfDays' => 5
                     ],
@@ -193,8 +193,8 @@ class PlanningTest extends AbstractApiTest
                         "@id"=> "/api/leaves/plannings",
                         "@type"=> "Leave",
                         'id' => 16,
-                        'startDate' => '2023-05-24T00:00:00+02:00',
-                        'endDate' => '2023-05-30T00:00:00+02:00',
+                        'startDate' => '2023-05-24T00:00:00+00:00',
+                        'endDate' => '2023-05-30T00:00:00+00:00',
                         "reason"=> "paid",
                         "numberOfDays"=> 5
                     ]
@@ -235,8 +235,8 @@ class PlanningTest extends AbstractApiTest
                         "@id"=> "/api/leaves/plannings",
                         "@type"=> "Leave",
                         'id' => 2,
-                        'startDate' => '2023-05-24T00:00:00+02:00',
-                        'endDate' => '2023-05-30T00:00:00+02:00',
+                        'startDate' => '2023-05-24T00:00:00+00:00',
+                        'endDate' => '2023-05-30T00:00:00+00:00',
                         "reason"=> "unpaid",
                         'numberOfDays' => 5
                     ],
@@ -244,8 +244,8 @@ class PlanningTest extends AbstractApiTest
                         "@id"=> "/api/leaves/plannings",
                         "@type"=> "Leave",
                         'id' => 17,
-                        'startDate' => '2023-05-24T00:00:00+02:00',
-                        'endDate' => '2023-05-30T00:00:00+02:00',
+                        'startDate' => '2023-05-24T00:00:00+00:00',
+                        'endDate' => '2023-05-30T00:00:00+00:00',
                         "reason"=> "paid",
                         "numberOfDays"=> 5
                     ]
@@ -292,8 +292,8 @@ class PlanningTest extends AbstractApiTest
                     "@id"=> "/api/leaves/plannings",
                     "@type"=> "Leave",
                     'id' => 2,
-                    'startDate' => '2023-05-24T00:00:00+02:00',
-                    'endDate' => '2023-05-30T00:00:00+02:00',
+                    'startDate' => '2023-05-24T00:00:00+00:00',
+                    'endDate' => '2023-05-30T00:00:00+00:00',
                     "reason"=> "unpaid",
                     'numberOfDays' => 5
                 ],
@@ -301,8 +301,8 @@ class PlanningTest extends AbstractApiTest
                     "@id"=> "/api/leaves/plannings",
                     "@type"=> "Leave",
                     'id' => 17,
-                    'startDate' => '2023-05-24T00:00:00+02:00',
-                    'endDate' => '2023-05-30T00:00:00+02:00',
+                    'startDate' => '2023-05-24T00:00:00+00:00',
+                    'endDate' => '2023-05-30T00:00:00+00:00',
                     "reason"=> "paid",
                     "numberOfDays"=> 5
                 ]
