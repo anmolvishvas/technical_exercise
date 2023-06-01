@@ -9,7 +9,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\DBAL\Types\EnumLeaveReasonType;
-use App\Providers\LeaveProvider;
+use App\Provider\LeaveProvider;
 use App\Repository\LeaveRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
