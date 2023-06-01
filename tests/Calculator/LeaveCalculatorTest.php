@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Service;
+namespace App\Tests\Calculator;
 
-use App\Service\LeaveCalculator;
+use App\Calculator\LeaveCalculator;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 

@@ -10,9 +10,9 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Processor\CollaboratorProcessor;
+use App\Provider\CollaboratorProvider;
 use App\Repository\CollaboratorsRepository;
-use App\State\CollaboratorProvider;
-use App\State\CollaboratorStateProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     security: 'is_granted(\'ROLE_ADMIN\')',
     operations: [
         new Post(
-            processor: CollaboratorStateProcessor::class,
+            processor: CollaboratorProcessor::class,
         ),
         new Delete(
         ),

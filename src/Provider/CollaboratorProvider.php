@@ -2,19 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\State;
+namespace App\Provider;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Repository\CollaboratorsRepository;
-use App\Repository\PlanningRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
-class PlanningProvider implements ProviderInterface
+class CollaboratorProvider implements ProviderInterface
 {
     public function __construct(
         private readonly Security $security,
-        private readonly PlanningRepository $planningRepository,
         private readonly CollaboratorsRepository $collaboratorsRepository,
     ) {
     }
@@ -27,8 +25,8 @@ class PlanningProvider implements ProviderInterface
                 'user' => $user
             ],
         );
-        $planning = $this->planningRepository->findPlanningOfLoggedInUserCollaborator($collaborator);
+        $collaboratorsPlanning = $this->collaboratorsRepository->findCollaboratorsOfLoggedInUserPlanning($collaborator->getPlanning());
 
-        return $planning;
+        return $collaboratorsPlanning;
     }
 }

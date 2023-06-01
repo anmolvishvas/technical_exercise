@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\tests\State;
+namespace App\tests\Provider;
 
 use PHPUnit\Framework\TestCase;
-use App\State\PlanningProvider;
+use App\Provider\PlanningProvider;
 use ApiPlatform\Metadata\Operation;
 use App\Repository\CollaboratorsRepository;
 use App\Repository\PlanningRepository;

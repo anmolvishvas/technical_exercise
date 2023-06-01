@@ -2,32 +2,35 @@
 
 declare(strict_types=1);
 
-namespace App\tests\State;
+namespace App\tests\Provider;
 
 use PHPUnit\Framework\TestCase;
-use App\State\CollaboratorProvider;
+use App\Provider\LeaveProvider;
 use ApiPlatform\Metadata\Operation;
 use App\Repository\CollaboratorsRepository;
+use App\Repository\LeaveRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use PHPUnit\Framework\MockObject\MockObject;
 use App\Entity\User;
 use App\Entity\Collaborator;
 use App\Entity\Planning;
 
-class CollaboratorProviderTest extends TestCase
+class LeaveProviderTest extends TestCase
 {
     private Security|MockObject $security;
     private CollaboratorsRepository|MockObject $collaboratorsRepository;
+    private LeaveRepository|MockObject $leaveRepository;
 
     protected function setUp(): void
     {
         $this->security = $this->createMock(Security::class);
+        $this->leaveRepository = $this->createMock(LeaveRepository::class);
         $this->collaboratorsRepository = $this->createMock(CollaboratorsRepository::class);
     }
 
     public function testProvide(): void
     {
-        $provider = new CollaboratorProvider($this->security, $this->collaboratorsRepository);
+        $provider = new LeaveProvider($this->security, $this->leaveRepository, $this->collaboratorsRepository);
 
         $user = new User();
         $planning = new Planning();
@@ -50,9 +53,8 @@ class CollaboratorProviderTest extends TestCase
             ->with(['user' => $user])
             ->willReturn($collaborator);
 
-        $this->collaboratorsRepository
-            ->expects($this->once())
-            ->method('findCollaboratorsOfLoggedInUserPlanning')
+        $this->leaveRepository->expects($this->once())
+            ->method('findLeavesOfLoggedInUserPlanning')
             ->with($planning)
             ->willReturn([]);
 

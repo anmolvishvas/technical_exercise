@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\tests\State;
+namespace App\tests\Processor;
 
 use PHPUnit\Framework\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,7 +10,7 @@ use App\Repository\PlanningRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use App\State\RemoveCollaboratorInPlanningProcessor;
+use App\Processor\RemoveCollaboratorInPlanningProcessor;
 use App\Entity\Planning;
 use App\Entity\Collaborator;
 use ApiPlatform\Metadata\Operation;

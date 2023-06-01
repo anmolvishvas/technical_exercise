@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\tests\State;
+namespace App\tests\Processor;
 
 use ApiPlatform\Metadata\Post;
 use App\Entity\Collaborator;
 use App\Entity\Planning;
 use App\Repository\UserRepository;
-use App\State\CollaboratorStateProcessor;
+use App\Processor\CollaboratorProcessor;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class CollaboratorStateProcessorTest extends TestCase
+class CollaboratorProcessorTest extends TestCase
 {
     private EntityManagerInterface|MockObject $entityManager;
     private UserRepository|MockObject $userRepository;
@@ -41,7 +41,7 @@ class CollaboratorStateProcessorTest extends TestCase
             ->expects(self::once())
             ->method('flush');
         
-        $collaboratorStateProcessor = new CollaboratorStateProcessor(
+        $collaboratorProcessor = new CollaboratorProcessor(
             $this->entityManager,
             $this->userRepository,
             $this->passwordEncoder
@@ -54,7 +54,7 @@ class CollaboratorStateProcessorTest extends TestCase
             
         $operation = new Post('/fake', class: Collaborator::class);
 
-        $collaboratorStateProcessor->process(
+        $collaboratorProcessor->process(
             $expected,
             $operation,
             []
@@ -75,7 +75,7 @@ class CollaboratorStateProcessorTest extends TestCase
             ->expects(self::never())
             ->method('flush');
         
-        $collaboratorStateProcessor = new CollaboratorStateProcessor(
+        $collaboratorProcessor = new CollaboratorProcessor(
             $this->entityManager,
             $this->userRepository,
             $this->passwordEncoder
@@ -83,7 +83,7 @@ class CollaboratorStateProcessorTest extends TestCase
 
         $operation = new Post('/fake', class: Collaborator::class);
 
-        $collaboratorStateProcessor->process(
+        $collaboratorProcessor->process(
             new Planning(),
             $operation,
             []
