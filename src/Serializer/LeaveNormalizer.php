@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Serializer;
 
+use App\Calculator\LeaveCalculator;
 use App\Entity\Leave;
-use App\Service\LeaveCalculator;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
