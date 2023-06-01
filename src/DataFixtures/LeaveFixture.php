@@ -17,8 +17,8 @@ class LeaveFixture extends Fixture implements DependentFixtureInterface
         $index = 1;
         for ($i = 1; $i <= 15; ++$i) {
             $leave = new Leave();
-            $leave->setStartDate(new \DateTime('2023-05-24T10:23:31.088Z'));
-            $leave->setEndDate(new \DateTime('2023-05-30T10:23:31.088Z'));
+            $leave->setStartDate(new \DateTime('2023-05-24 10:23:31'));
+            $leave->setEndDate(new \DateTime('2023-05-30 10:23:31.08'));
             $leave->setReason(EnumLeaveReasonType::UNPAID);
             $leave->setCollaborator($this->getReference(UserFixtures::ADMIN_COLLABORATOR_REFERENCE));
             $leave->setPlanning($this->getReference('PLANNING_'.$index));
@@ -32,8 +32,8 @@ class LeaveFixture extends Fixture implements DependentFixtureInterface
         $old_index = 1;
         for ($i = 1; $i <= 15; ++$i) {
             $leave = new Leave();
-            $leave->setStartDate(new \DateTime('2023-05-24T10:23:31.088Z'));
-            $leave->setEndDate(new \DateTime('2023-05-30T10:23:31.088Z'));
+            $leave->setStartDate(new \DateTime('2023-05-24 10:23:31'));
+            $leave->setEndDate(new \DateTime('2023-05-30 10:23:31.08'));
             $leave->setReason(EnumLeaveReasonType::PAID);
             $leave->setCollaborator($this->getReference(UserFixtures::USER_COLLABORATOR_REFERENCE));
             $leave->setPlanning($this->getReference('PLANNING_'.$old_index));
